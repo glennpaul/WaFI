@@ -2,16 +2,13 @@
 //  PickerViewController.swift
 //  WaFI
 //
-//  Created by Paul Sumido on 2018-06-03.
+//  Created by Paul Sumido on 2018-06-04.
 //  Copyright © 2018 Paul Sumido. All rights reserved.
 //
 
 import UIKit
 
 class PickerViewController: UIViewController {
-    
-    //MARK: Properties
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +20,12 @@ class PickerViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    //MARK: Actions
+    @IBAction func cancel(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     
 
     /*

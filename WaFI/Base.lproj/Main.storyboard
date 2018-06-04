@@ -15,8 +15,8 @@
         <!--Date and Time-->
         <scene sceneID="T4W-58-Um4">
             <objects>
-                <viewController id="Iks-MD-kLs" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Ndn-A6-Lm4">
+                <viewController id="Iks-MD-kLs" customClass="PickerViewController" customModule="WaFI" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ndn-A6-Lm4" customClass="Pick">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -32,17 +32,14 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="Jtc-LC-JDC">
-                                        <rect key="frame" x="12" y="26" width="319" height="216"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="216" id="drq-r8-uXj"/>
-                                        </constraints>
-                                        <date key="date" timeIntervalSinceReferenceDate="549769674.93216097">
-                                            <!--2018-06-04 01:47:54 +0000-->
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="Rwm-pY-wUu">
+                                        <rect key="frame" x="12" y="26" width="319" height="215"/>
+                                        <date key="date" timeIntervalSinceReferenceDate="549769690.49266601">
+                                            <!--2018-06-04 01:48:10 +0000-->
                                         </date>
                                     </datePicker>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0f-op-YTD">
-                                        <rect key="frame" x="150.5" y="247" width="42" height="21"/>
+                                        <rect key="frame" x="150.5" y="246" width="42" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="wje-KP-R7z"/>
                                         </constraints>
@@ -50,10 +47,13 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="Rwm-pY-wUu">
-                                        <rect key="frame" x="12" y="273" width="319" height="215"/>
-                                        <date key="date" timeIntervalSinceReferenceDate="549769690.49266601">
-                                            <!--2018-06-04 01:48:10 +0000-->
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="Jtc-LC-JDC">
+                                        <rect key="frame" x="12" y="272" width="319" height="216"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="216" id="drq-r8-uXj"/>
+                                        </constraints>
+                                        <date key="date" timeIntervalSinceReferenceDate="549769674.93216097">
+                                            <!--2018-06-04 01:47:54 +0000-->
                                         </date>
                                     </datePicker>
                                 </subviews>
@@ -73,7 +73,11 @@
                         <viewLayoutGuide key="safeArea" id="JJf-dh-4ws"/>
                     </view>
                     <navigationItem key="navigationItem" title="Date and Time" id="2ju-Am-b85">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="DPv-OM-FbW"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="DPv-OM-FbW">
+                            <connections>
+                                <action selector="cancel:" destination="Iks-MD-kLs" id="Iki-hO-rrP"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="snV-wj-5Rb"/>
                     </navigationItem>
                 </viewController>
@@ -109,7 +113,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ViA-yo-v1m">
-                                            <rect key="frame" x="108" y="40" width="251" height="49"/>
+                                            <rect key="frame" x="108" y="40" width="251" height="39"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
@@ -173,8 +177,8 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="WuP-Rg-fEc" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="5Ma-ig-st2"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="WuP-Rg-fEc" secondAttribute="trailing" constant="8" id="JS7-JO-IYq"/>
+                            <constraint firstItem="WuP-Rg-fEc" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="ccV-P5-xa1"/>
                             <constraint firstItem="WuP-Rg-fEc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="mxF-wL-5sQ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -183,7 +187,11 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="0Jx-4l-3d0"/>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Event" id="HhW-YS-78t">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="QaV-UD-Dqq"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="QaV-UD-Dqq">
+                            <connections>
+                                <action selector="cancel:" destination="BYZ-38-t0r" id="x1E-EN-hLg"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Set Date" id="sCj-qx-KBB">
                             <connections>
                                 <segue destination="4Li-hc-UMD" kind="presentation" id="0SA-m7-dp3"/>
