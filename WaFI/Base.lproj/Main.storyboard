@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" systemVersion="17A277" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -9,13 +13,67 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="WaFI" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="WuP-Rg-fEc">
+                                <rect key="frame" x="8" y="28" width="359" height="623"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Me-Mo-OWp">
+                                        <rect key="frame" x="158.5" y="0.0" width="42" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UwX-fF-uQ5">
+                                        <rect key="frame" x="16" y="25.5" width="327" height="30"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                    </textField>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NZb-dl-0VB">
+                                        <rect key="frame" x="60" y="60.5" width="239" height="120.5"/>
+                                    </imageView>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="9FN-R0-i9F">
+                                        <rect key="frame" x="20" y="186" width="319" height="216"/>
+                                        <date key="date" timeIntervalSinceReferenceDate="549767263.93546498">
+                                            <!--2018-06-04 01:07:43 +0000-->
+                                        </date>
+                                    </datePicker>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="U82-t4-NIb">
+                                        <rect key="frame" x="20" y="407" width="319" height="216"/>
+                                        <date key="date" timeIntervalSinceReferenceDate="549767252.36462903">
+                                            <!--2018-06-04 01:07:32 +0000-->
+                                        </date>
+                                    </datePicker>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="UwX-fF-uQ5" secondAttribute="trailing" constant="16" id="C8h-BZ-1Xo"/>
+                                    <constraint firstItem="NZb-dl-0VB" firstAttribute="leading" secondItem="WuP-Rg-fEc" secondAttribute="leading" constant="60" id="CN1-HP-PhG"/>
+                                    <constraint firstItem="UwX-fF-uQ5" firstAttribute="leading" secondItem="WuP-Rg-fEc" secondAttribute="leading" constant="16" id="D1v-pC-Q70"/>
+                                    <constraint firstItem="U82-t4-NIb" firstAttribute="leading" secondItem="WuP-Rg-fEc" secondAttribute="leading" constant="20" symbolic="YES" id="b6e-Wh-dlR"/>
+                                    <constraint firstItem="U82-t4-NIb" firstAttribute="leading" secondItem="9FN-R0-i9F" secondAttribute="leading" id="qSO-fS-7C9"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="WuP-Rg-fEc" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="5Ma-ig-st2"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="WuP-Rg-fEc" secondAttribute="trailing" constant="8" id="JS7-JO-IYq"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="WuP-Rg-fEc" secondAttribute="bottom" constant="16" id="Kml-uv-lPv"/>
+                            <constraint firstItem="WuP-Rg-fEc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="mxF-wL-5sQ"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="datePicker" destination="U82-t4-NIb" id="X5Q-pT-LuO"/>
+                        <outlet property="editText" destination="UwX-fF-uQ5" id="FLN-6j-PaV"/>
+                        <outlet property="photo" destination="NZb-dl-0VB" id="XD0-2u-FYL"/>
+                        <outlet property="textLabel" destination="4Me-Mo-OWp" id="BfB-im-ZhS"/>
+                        <outlet property="timePicker" destination="9FN-R0-i9F" id="637-wk-Wx2"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
