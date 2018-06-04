@@ -35,7 +35,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        textLabel.text = editText.text
+        
     }
 
 

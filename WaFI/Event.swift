@@ -19,7 +19,7 @@ class Event {
     init?(name: String, photo: UIImage?, date: Date) {
         
         // Initialization should fail if there is no name or if the rating is negative.
-        if name.isEmpty || date <= Date()  {
+        if name.isEmpty  {
             return nil
         }
         
