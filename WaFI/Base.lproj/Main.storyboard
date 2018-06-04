@@ -11,7 +11,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Date and Time-->
         <scene sceneID="T4W-58-Um4">
             <objects>
                 <viewController id="Iks-MD-kLs" sceneMemberID="viewController">
@@ -62,14 +62,14 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="JJf-dh-4ws"/>
                     </view>
-                    <navigationItem key="navigationItem" id="2ju-Am-b85">
+                    <navigationItem key="navigationItem" title="Date and Time" id="2ju-Am-b85">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="DPv-OM-FbW"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="snV-wj-5Rb"/>
                     </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vi6-o1-TKe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4010.4000000000001" y="62.518740629685162"/>
+            <point key="canvasLocation" x="3758" y="63"/>
         </scene>
         <!--Your Events-->
         <scene sceneID="2co-1b-hFE">
@@ -104,9 +104,9 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yYq-Ra-in6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="580" y="62.518740629685162"/>
+            <point key="canvasLocation" x="462" y="63"/>
         </scene>
-        <!--View Controller-->
+        <!--Event-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="WaFI" customModuleProvider="target" sceneMemberID="viewController">
@@ -115,22 +115,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="WuP-Rg-fEc">
-                                <rect key="frame" x="8" y="72" width="359" height="310.5"/>
+                                <rect key="frame" x="8" y="72" width="359" height="285"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Me-Mo-OWp">
-                                        <rect key="frame" x="158.5" y="0.0" width="42" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <textField opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UwX-fF-uQ5">
-                                        <rect key="frame" x="16" y="25.5" width="327" height="30"/>
+                                        <rect key="frame" x="16" y="0.0" width="327" height="30"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                                     </textField>
                                     <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="250" placeholderIntrinsicHeight="250" image="defaultPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="NZb-dl-0VB">
-                                        <rect key="frame" x="54.5" y="60.5" width="250" height="250"/>
+                                        <rect key="frame" x="54.5" y="35" width="250" height="250"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="NZb-dl-0VB" secondAttribute="height" multiplier="1:1" id="GZX-pe-uZM"/>
                                         </constraints>
@@ -139,7 +133,6 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="UwX-fF-uQ5" secondAttribute="trailing" constant="16" id="C8h-BZ-1Xo"/>
                                     <constraint firstItem="UwX-fF-uQ5" firstAttribute="leading" secondItem="WuP-Rg-fEc" secondAttribute="leading" constant="16" id="D1v-pC-Q70"/>
-                                    <constraint firstItem="UwX-fF-uQ5" firstAttribute="top" secondItem="4Me-Mo-OWp" secondAttribute="bottom" constant="5" id="q9d-Ue-uUi"/>
                                 </constraints>
                             </stackView>
                         </subviews>
@@ -154,7 +147,7 @@
                     <toolbarItems>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="0Jx-4l-3d0"/>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" id="HhW-YS-78t">
+                    <navigationItem key="navigationItem" title="Event" id="HhW-YS-78t">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="QaV-UD-Dqq"/>
                         <barButtonItem key="rightBarButtonItem" title="Set Date" id="sCj-qx-KBB">
                             <connections>
@@ -166,12 +159,11 @@
                     <connections>
                         <outlet property="editText" destination="UwX-fF-uQ5" id="FLN-6j-PaV"/>
                         <outlet property="photo" destination="NZb-dl-0VB" id="XD0-2u-FYL"/>
-                        <outlet property="textLabel" destination="4Me-Mo-OWp" id="BfB-im-ZhS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2271.1999999999998" y="62.518740629685162"/>
+            <point key="canvasLocation" x="2103" y="63"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="lOF-oc-584">
@@ -207,7 +199,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QXV-hy-U8s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1332" y="62.518740629685162"/>
+            <point key="canvasLocation" x="1276" y="63"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="r9T-qE-hiU">
@@ -225,7 +217,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V4g-BB-oU2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3071.1999999999998" y="62.518740629685162"/>
+            <point key="canvasLocation" x="2929" y="63"/>
         </scene>
     </scenes>
     <resources>

@@ -11,7 +11,6 @@ import UIKit
 class ViewController: UIViewController, UITextFieldDelegate {
     
     //MARK: Properties
-    @IBOutlet weak var textLabel: UILabel!
     @IBOutlet weak var editText: UITextField!
     @IBOutlet weak var photo: UIImageView!
     
