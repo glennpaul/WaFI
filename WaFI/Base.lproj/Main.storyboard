@@ -23,8 +23,8 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="vnh-nt-7oj">
                                 <rect key="frame" x="16" y="69" width="343" height="488"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o8X-QA-iWF">
-                                        <rect key="frame" x="150.5" y="0.0" width="42" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose Time:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o8X-QA-iWF">
+                                        <rect key="frame" x="119" y="0.0" width="105.5" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="SYY-Ch-TRH"/>
                                         </constraints>
@@ -33,13 +33,16 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="Rwm-pY-wUu">
-                                        <rect key="frame" x="12" y="26" width="319" height="215"/>
+                                        <rect key="frame" x="12" y="26" width="319" height="216"/>
                                         <date key="date" timeIntervalSinceReferenceDate="549769690.49266601">
                                             <!--2018-06-04 01:48:10 +0000-->
                                         </date>
+                                        <connections>
+                                            <action selector="changeTime:forEvent:" destination="Iks-MD-kLs" eventType="valueChanged" id="gvs-Yv-v9a"/>
+                                        </connections>
                                     </datePicker>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0f-op-YTD">
-                                        <rect key="frame" x="150.5" y="246" width="42" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Choose Date:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0f-op-YTD">
+                                        <rect key="frame" x="119.5" y="247" width="104" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="wje-KP-R7z"/>
                                         </constraints>
@@ -48,13 +51,16 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="Jtc-LC-JDC">
-                                        <rect key="frame" x="12" y="272" width="319" height="216"/>
+                                        <rect key="frame" x="12" y="273" width="319" height="215"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="216" id="drq-r8-uXj"/>
+                                            <constraint firstAttribute="height" constant="215" id="drq-r8-uXj"/>
                                         </constraints>
                                         <date key="date" timeIntervalSinceReferenceDate="549769674.93216097">
                                             <!--2018-06-04 01:47:54 +0000-->
                                         </date>
+                                        <connections>
+                                            <action selector="changeDate:forEvent:" destination="Iks-MD-kLs" eventType="valueChanged" id="jld-Vp-OgG"/>
+                                        </connections>
                                     </datePicker>
                                 </subviews>
                                 <constraints>
@@ -80,6 +86,10 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="snV-wj-5Rb"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="datePicker" destination="Jtc-LC-JDC" id="PAY-1k-4Yk"/>
+                        <outlet property="timePicker" destination="Rwm-pY-wUu" id="Zmo-5v-BJK"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vi6-o1-TKe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

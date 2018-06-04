@@ -35,7 +35,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        //add functionality to change navigation menu text
+        navigationItem.title = textField.text
     }
     
     //MARK: Actions
