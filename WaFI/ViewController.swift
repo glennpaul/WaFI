@@ -14,8 +14,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var textLabel: UILabel!
     @IBOutlet weak var editText: UITextField!
     @IBOutlet weak var photo: UIImageView!
-    @IBOutlet weak var timePicker: UIDatePicker!
-    @IBOutlet weak var datePicker: UIDatePicker!
     
 
     override func viewDidLoad() {

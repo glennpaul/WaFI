@@ -13,6 +13,7 @@
 		522E493020C4C74100AE1093 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 522E492F20C4C74100AE1093 /* Assets.xcassets */; };
 		522E493320C4C74100AE1093 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 522E493120C4C74100AE1093 /* LaunchScreen.storyboard */; };
 		522E493E20C4C74100AE1093 /* WaFITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522E493D20C4C74100AE1093 /* WaFITests.swift */; };
+		522E494A20C4D16A00AE1093 /* PickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522E494820C4D16A00AE1093 /* PickerViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		522E493920C4C74100AE1093 /* WaFITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WaFITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		522E493D20C4C74100AE1093 /* WaFITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaFITests.swift; sourceTree = "<group>"; };
 		522E493F20C4C74100AE1093 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		522E494820C4D16A00AE1093 /* PickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 				522E492820C4C74000AE1093 /* AppDelegate.swift */,
 				522E492A20C4C74000AE1093 /* ViewController.swift */,
 				522E492C20C4C74000AE1093 /* Main.storyboard */,
+				522E494820C4D16A00AE1093 /* PickerViewController.swift */,
 				522E492F20C4C74100AE1093 /* Assets.xcassets */,
 				522E493120C4C74100AE1093 /* LaunchScreen.storyboard */,
 				522E493420C4C74100AE1093 /* Info.plist */,
@@ -197,6 +200,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				522E494A20C4D16A00AE1093 /* PickerViewController.swift in Sources */,
 				522E492B20C4C74000AE1093 /* ViewController.swift in Sources */,
 				522E492920C4C74000AE1093 /* AppDelegate.swift in Sources */,
 			);
