@@ -44,6 +44,19 @@ class EventTableViewController: UITableViewController {
         return events.count
     }
     
+    //MARK: Actions
+    
+    @IBAction func unwindToEventList(sender: UIStoryboardSegue) {
+        if let sourceViewController = sender.source as? ViewController, let event = sourceViewController.event {
+            
+            // Add a new meal.
+            let newIndexPath = IndexPath(row: events.count, section: 0)
+            
+            events.append(event)
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        }
+    }
+    
     
     //MARK: Private Methods
     
