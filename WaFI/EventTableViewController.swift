@@ -9,7 +9,7 @@
 import UIKit
 
 class EventTableViewController: UITableViewController {
-    
+
     
     //MARK: Properties
     var events = [Event]()
@@ -45,7 +45,6 @@ class EventTableViewController: UITableViewController {
     }
     
     //MARK: Actions
-    
     @IBAction func unwindToEventList(sender: UIStoryboardSegue) {
         if let sourceViewController = sender.source as? ViewController, let event = sourceViewController.event {
             

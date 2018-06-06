@@ -10,27 +10,24 @@ import UIKit
 import os.log
 
 protocol PickerViewControllerDelegate: class {
-    
     func dateTimeChosen(thisEvent:Event?)
-    
 }
 
 class PickerViewController: UIViewController {
-    
-    var event: Event?
-    weak var delegate: PickerViewControllerDelegate?
     
     //MARK: Properties
     @IBOutlet weak var timePicker: UIDatePicker!
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var dateTimeLabel: UILabel!
     
-    var time:String! = ""
-    var date:String! = ""
+    
+    weak var delegate: PickerViewControllerDelegate?
+    var event: Event?
+    var time:String! = "5:00 AM"
+    var date:String! = "03/03/03"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         //create date time formatters and set date time variables
         let timeFormatter = DateFormatter()
         timeFormatter.timeStyle = DateFormatter.Style.short
@@ -54,59 +51,44 @@ class PickerViewController: UIViewController {
     
     //MARK: Actions
     @IBAction func changeTime(_ sender: Any, forEvent event: UIEvent) {
-        
         let timeFormatter = DateFormatter()
         timeFormatter.timeStyle = DateFormatter.Style.short
-        
         time = timeFormatter.string(from: timePicker.date)
         updateLabel()
     }
     @IBAction func changeDate(_ sender: UIDatePicker, forEvent event: UIEvent) {
-        
         let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = DateFormatter.Style.medium
-        
+        dateFormatter.dateStyle = DateFormatter.Style.short
         date = dateFormatter.string(from: datePicker.date)
         updateLabel()
     }
     private func updateLabel() {
-        dateTimeLabel.text = time + " on " + date
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = DateFormatter.Style.medium
+        dateTimeLabel.text = time + " on " + dateFormatter.string(from: datePicker.date)
+
+        //format string into date for final event and set it
+        let strToDate = DateFormatter()
+        strToDate.dateFormat = "M/d/yy h:mm a" //format of label
+        event?.date = strToDate.date(from: date + " " + time)!
         
-        print(event?.name ?? "NOOO")
-        event?.date = timePicker.date
-        print(event?.date ?? "0:00")
+        
+        //test what it will look like on final page
+        //let second = DateFormatter()
+        //second.dateFormat = "yyyy-MM-dd HH:mm:ss" //Your date format
+        //print(second.string(from: (event?.date)!))
+        
     }
+    
+
+    
+    // MARK: - Navigation
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
     }
     @IBAction func finishEdit(_ sender: UIBarButtonItem) {
         delegate?.dateTimeChosen(thisEvent:event)
-        print("finishedit")
         dismiss(animated: true, completion: nil)
     }
-    
-    
-
-    
-    // MARK: - Navigation
-    /*
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        super.prepare(for: segue, sender: sender)
-        
-        // Configure the destination view controller only when the save button is pressed.
-        guard let button = sender as? UIBarButtonItem, button === saveButton else {
-            os_log("The save button was not pressed, cancelling", log: OSLog.default, type: .debug)
-            return
-        }
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM dd, yyyy 'at' h:mm a"
-        let string = date + " at " + time
-        event = Event(name: (event?.name)!, photo: event?.photo, date: dateFormatter.date(from: string)!)
-        
-    }
-     */
 
 }

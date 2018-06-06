@@ -105,7 +105,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vi6-o1-TKe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3641" y="63"/>
+            <point key="canvasLocation" x="3374" y="63"/>
         </scene>
         <!--Your Events-->
         <scene sceneID="2co-1b-hFE">
@@ -179,33 +179,58 @@
                                 <rect key="frame" x="8" y="72" width="359" height="320"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UwX-fF-uQ5">
-                                        <rect key="frame" x="16" y="0.0" width="327" height="30"/>
+                                        <rect key="frame" x="8" y="0.0" width="343" height="30"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                                     </textField>
-                                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="250" placeholderIntrinsicHeight="250" image="defaultPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="NZb-dl-0VB">
+                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="250" placeholderIntrinsicHeight="250" image="defaultPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="NZb-dl-0VB">
                                         <rect key="frame" x="54.5" y="35" width="250" height="250"/>
+                                        <gestureRecognizers/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="NZb-dl-0VB" secondAttribute="height" multiplier="1:1" id="GZX-pe-uZM"/>
+                                            <constraint firstAttribute="width" secondItem="NZb-dl-0VB" secondAttribute="height" multiplier="1:1" id="T6k-an-Sg9"/>
                                         </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="nSy-IX-gvE" appends="YES" id="ZyP-gX-Ngx"/>
+                                        </connections>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Isl-gc-EcR">
-                                        <rect key="frame" x="156.5" y="290" width="46" height="30"/>
-                                        <state key="normal" title="Button"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Event must have Date/Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kUL-yY-3fH">
+                                        <rect key="frame" x="31.5" y="290" width="296" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="UwX-fF-uQ5" secondAttribute="trailing" constant="8" id="MAn-wD-rhh"/>
+                                    <constraint firstItem="UwX-fF-uQ5" firstAttribute="leading" secondItem="WuP-Rg-fEc" secondAttribute="leading" constant="8" id="gAU-ZN-NVs"/>
+                                </constraints>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="PWa-ob-0TK">
+                                <rect key="frame" x="8" y="493" width="359" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="100" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Isl-gc-EcR">
+                                        <rect key="frame" x="8" y="0.0" width="343" height="30"/>
+                                        <state key="normal" title="Add Date/Time Details"/>
+                                        <connections>
+                                            <segue destination="PmM-7r-HjV" kind="presentation" id="XhC-n8-d86"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="UwX-fF-uQ5" secondAttribute="trailing" constant="16" id="C8h-BZ-1Xo"/>
-                                    <constraint firstItem="UwX-fF-uQ5" firstAttribute="leading" secondItem="WuP-Rg-fEc" secondAttribute="leading" constant="16" id="D1v-pC-Q70"/>
+                                    <constraint firstItem="Isl-gc-EcR" firstAttribute="leading" secondItem="PWa-ob-0TK" secondAttribute="leading" constant="8" id="SQi-A8-iDu"/>
+                                    <constraint firstAttribute="trailing" secondItem="Isl-gc-EcR" secondAttribute="trailing" constant="8" id="nLu-ca-Ezi"/>
                                 </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="WuP-Rg-fEc" secondAttribute="trailing" constant="8" id="JS7-JO-IYq"/>
-                            <constraint firstItem="WuP-Rg-fEc" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="ccV-P5-xa1"/>
-                            <constraint firstItem="WuP-Rg-fEc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="mxF-wL-5sQ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="WuP-Rg-fEc" secondAttribute="trailing" constant="8" id="2rr-r3-nry"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="PWa-ob-0TK" secondAttribute="bottom" constant="100" id="360-jt-ylX"/>
+                            <constraint firstItem="WuP-Rg-fEc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="3v2-E9-chu"/>
+                            <constraint firstItem="WuP-Rg-fEc" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="8" id="6gb-rb-39m"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="PWa-ob-0TK" secondAttribute="trailing" constant="8" id="Shd-Hn-YXO"/>
+                            <constraint firstItem="PWa-ob-0TK" firstAttribute="leading" secondItem="WuP-Rg-fEc" secondAttribute="leading" id="icX-0f-WN4"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -218,21 +243,29 @@
                                 <action selector="cancel:" destination="BYZ-38-t0r" id="x1E-EN-hLg"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Set Date" id="sCj-qx-KBB">
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="sCj-qx-KBB">
                             <connections>
-                                <segue destination="dGX-I4-rKa" kind="presentation" id="3L2-Oh-9uM"/>
+                                <segue destination="grk-W0-XzF" kind="unwind" unwindAction="unwindToEventListWithSender:" id="KB3-Qr-any"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="dateTimeLabel" destination="kUL-yY-3fH" id="DYV-8b-lOQ"/>
                         <outlet property="editText" destination="UwX-fF-uQ5" id="FLN-6j-PaV"/>
-                        <outlet property="photo" destination="NZb-dl-0VB" id="XD0-2u-FYL"/>
+                        <outlet property="photoImage" destination="NZb-dl-0VB" id="uPB-QS-eVS"/>
+                        <outlet property="saveButton" destination="sCj-qx-KBB" id="xxw-SV-vle"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <exit id="grk-W0-XzF" userLabel="Exit" sceneMemberID="exit"/>
+                <tapGestureRecognizer id="nSy-IX-gvE">
+                    <connections>
+                        <action selector="selectImage:" destination="BYZ-38-t0r" id="s1t-ms-Rxi"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2103" y="63"/>
+            <point key="canvasLocation" x="1921" y="63"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="lOF-oc-584">
@@ -268,25 +301,25 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QXV-hy-U8s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1276" y="63"/>
+            <point key="canvasLocation" x="1194" y="63"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="fAP-yS-u4b">
+        <scene sceneID="d6q-Ud-qn9">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="dGX-I4-rKa" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="PmM-7r-HjV" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Kb8-bd-dup">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="mUq-qe-6eC">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="Iks-MD-kLs" kind="relationship" relationship="rootViewController" id="NoC-I9-28A"/>
+                        <segue destination="Iks-MD-kLs" kind="relationship" relationship="rootViewController" id="mmW-0z-gmV"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xHb-0i-tBG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zbj-wn-n7G" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2881" y="63"/>
+            <point key="canvasLocation" x="2647" y="63"/>
         </scene>
     </scenes>
     <resources>
