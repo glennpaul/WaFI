@@ -63,6 +63,7 @@ class ViewController: UIViewController, UITextFieldDelegate, PickerViewControlle
             let PickerView = navController.topViewController as! PickerViewController
             let photo = UIImage(named: "defaultPhoto")
             PickerView.event = Event(name:navigationItem.title!,photo:photo,date:Date())
+            PickerView.delegate = self
             print("got here 2")
         }
         //print("got here 3")
