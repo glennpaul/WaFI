@@ -12,7 +12,6 @@ class ViewController: UIViewController, UITextFieldDelegate, PickerViewControlle
     
     //PickerviewController delegate action
     func dateTimeChosen(thisEvent:Event?) {
-        print("doing")
         event = thisEvent
     }
     
@@ -26,10 +25,7 @@ class ViewController: UIViewController, UITextFieldDelegate, PickerViewControlle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //make delegate for editText
         editText.delegate = self
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,7 +37,6 @@ class ViewController: UIViewController, UITextFieldDelegate, PickerViewControlle
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         // Hide the keyboard.
         textField.resignFirstResponder()
-        print(event?.date ?? "hi")
         return true
     }
     
@@ -55,18 +50,13 @@ class ViewController: UIViewController, UITextFieldDelegate, PickerViewControlle
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
-        //print("got here 1")
-        //event = Event(name:navigationItem.title!,photo:photo,date:Date())
-        //    print("got here 2")
         print(segue.destination)
         if let navController = segue.destination as? UINavigationController {
             let PickerView = navController.topViewController as! PickerViewController
             let photo = UIImage(named: "defaultPhoto")
             PickerView.event = Event(name:navigationItem.title!,photo:photo,date:Date())
             PickerView.delegate = self
-            print("got here 2")
         }
-        //print("got here 3")
     }
     
     
