@@ -23,8 +23,13 @@ class PickerViewController: UIViewController {
     
     weak var delegate: PickerViewControllerDelegate?
     var event: Event?
-    var time:String! = "5:00 AM"
-    var date:String! = "03/03/03"
+    var time:String! = "4:20 AM"
+    var date:String! = "03/14/95"
+    
+    
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,6 +84,9 @@ class PickerViewController: UIViewController {
         //print(second.string(from: (event?.date)!))
         
     }
+    
+    
+    
     
 
     

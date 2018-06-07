@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os.log
 
 class EventTableViewController: UITableViewController {
 
@@ -46,13 +47,20 @@ class EventTableViewController: UITableViewController {
     
     //MARK: Actions
     @IBAction func unwindToEventList(sender: UIStoryboardSegue) {
+        
         if let sourceViewController = sender.source as? ViewController, let event = sourceViewController.event {
             
-            // Add a new meal.
-            let newIndexPath = IndexPath(row: events.count, section: 0)
-            
-            events.append(event)
-            tableView.insertRows(at: [newIndexPath], with: .automatic)
+            if let selectedIndexPath = tableView.indexPathForSelectedRow {
+                // Update an existing meal.
+                events[selectedIndexPath.row] = event
+                tableView.reloadRows(at: [selectedIndexPath], with: .none)
+            } else {
+                // Add a new meal.
+                let newIndexPath = IndexPath(row: events.count, section: 0)
+                
+                events.append(event)
+                tableView.insertRows(at: [newIndexPath], with: .automatic)
+            }
         }
     }
     
@@ -98,7 +106,6 @@ class EventTableViewController: UITableViewController {
         
         //create date formatter for date conversion into string
         let formatter = DateFormatter()
-        // initially set the format based on your datepicker date / server String (change depending on date pickers)
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
         //set values in cells
@@ -144,14 +151,39 @@ class EventTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        
+        super.prepare(for: segue, sender: sender)
+        
+        switch(segue.identifier ?? "") {
+            
+        case "addEvent":
+            os_log("Adding a new meal.", log: OSLog.default, type: .debug)
+            
+        case "showEvent":
+            guard let ViewController = segue.destination as? ViewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            
+            guard let selectedEventCell = sender as? EventTableViewCell else {
+                fatalError("Unexpected sender: \(String(describing: sender))")
+            }
+            
+            guard let indexPath = tableView.indexPath(for: selectedEventCell) else {
+                fatalError("The selected cell is not being displayed by the table")
+            }
+            
+            let selectedEvent = events[indexPath.row]
+            ViewController.event = selectedEvent
+            
+        default:
+            fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
+        }
     }
-    */
+ 
 
 }
