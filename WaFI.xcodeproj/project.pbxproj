@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		35B3016494A02690B469E4C4 /* Pods_WaFITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87277918DA7BD351651DF2A /* Pods_WaFITests.framework */; };
 		522E492920C4C74000AE1093 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522E492820C4C74000AE1093 /* AppDelegate.swift */; };
 		522E492B20C4C74000AE1093 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522E492A20C4C74000AE1093 /* ViewController.swift */; };
 		522E492E20C4C74000AE1093 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 522E492C20C4C74000AE1093 /* Main.storyboard */; };
@@ -17,6 +18,11 @@
 		522E494F20C56CDD00AE1093 /* EventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522E494E20C56CDD00AE1093 /* EventTableViewCell.swift */; };
 		522E495120C5778000AE1093 /* EventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522E495020C5778000AE1093 /* EventTableViewController.swift */; };
 		522E495320C58DE900AE1093 /* PickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522E495220C58DE900AE1093 /* PickerViewController.swift */; };
+		522E495520C9E21100AE1093 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 522E495420C9E21100AE1093 /* GoogleService-Info.plist */; };
+		5266420320CA019A00AE2DD9 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5266420220CA019A00AE2DD9 /* SignInViewController.swift */; };
+		5266420520CA144900AE2DD9 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5266420420CA144900AE2DD9 /* SignUpViewController.swift */; };
+		5266420720CA145C00AE2DD9 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5266420620CA145C00AE2DD9 /* ResetPasswordViewController.swift */; };
+		5E6B72D5F21C211BC9727B17 /* Pods_WaFI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEC5C00F6B0DE0D822C05D0E /* Pods_WaFI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		26C159051202692732BB611C /* Pods-WaFITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WaFITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WaFITests/Pods-WaFITests.debug.xcconfig"; sourceTree = "<group>"; };
 		522E492520C4C74000AE1093 /* WaFI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WaFI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		522E492820C4C74000AE1093 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		522E492A20C4C74000AE1093 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -44,6 +51,15 @@
 		522E494E20C56CDD00AE1093 /* EventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTableViewCell.swift; sourceTree = "<group>"; };
 		522E495020C5778000AE1093 /* EventTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTableViewController.swift; sourceTree = "<group>"; };
 		522E495220C58DE900AE1093 /* PickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewController.swift; sourceTree = "<group>"; };
+		522E495420C9E21100AE1093 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		5266420220CA019A00AE2DD9 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		5266420420CA144900AE2DD9 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		5266420620CA145C00AE2DD9 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
+		8550C3FB667648613CA349C8 /* Pods-WaFITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WaFITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-WaFITests/Pods-WaFITests.release.xcconfig"; sourceTree = "<group>"; };
+		A7270B5EA03BF1A497723D6F /* Pods-WaFI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WaFI.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WaFI/Pods-WaFI.debug.xcconfig"; sourceTree = "<group>"; };
+		CA150B9BE7018974791264C6 /* Pods-WaFI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WaFI.release.xcconfig"; path = "Pods/Target Support Files/Pods-WaFI/Pods-WaFI.release.xcconfig"; sourceTree = "<group>"; };
+		D87277918DA7BD351651DF2A /* Pods_WaFITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WaFITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FEC5C00F6B0DE0D822C05D0E /* Pods_WaFI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WaFI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E6B72D5F21C211BC9727B17 /* Pods_WaFI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35B3016494A02690B469E4C4 /* Pods_WaFITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,6 +88,8 @@
 				522E492720C4C74000AE1093 /* WaFI */,
 				522E493C20C4C74100AE1093 /* WaFITests */,
 				522E492620C4C74000AE1093 /* Products */,
+				F20D080BD7541E97FA0BAAA9 /* Pods */,
+				6FAEFBEEDB615538E908691E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -86,15 +106,19 @@
 			isa = PBXGroup;
 			children = (
 				522E492820C4C74000AE1093 /* AppDelegate.swift */,
+				522E494C20C56B7B00AE1093 /* Event.swift */,
 				522E495020C5778000AE1093 /* EventTableViewController.swift */,
+				522E494E20C56CDD00AE1093 /* EventTableViewCell.swift */,
 				522E492A20C4C74000AE1093 /* ViewController.swift */,
 				522E495220C58DE900AE1093 /* PickerViewController.swift */,
+				5266420220CA019A00AE2DD9 /* SignInViewController.swift */,
+				5266420420CA144900AE2DD9 /* SignUpViewController.swift */,
+				5266420620CA145C00AE2DD9 /* ResetPasswordViewController.swift */,
 				522E492C20C4C74000AE1093 /* Main.storyboard */,
-				522E494E20C56CDD00AE1093 /* EventTableViewCell.swift */,
-				522E494C20C56B7B00AE1093 /* Event.swift */,
 				522E492F20C4C74100AE1093 /* Assets.xcassets */,
 				522E493120C4C74100AE1093 /* LaunchScreen.storyboard */,
 				522E493420C4C74100AE1093 /* Info.plist */,
+				522E495420C9E21100AE1093 /* GoogleService-Info.plist */,
 			);
 			path = WaFI;
 			sourceTree = "<group>";
@@ -108,6 +132,26 @@
 			path = WaFITests;
 			sourceTree = "<group>";
 		};
+		6FAEFBEEDB615538E908691E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FEC5C00F6B0DE0D822C05D0E /* Pods_WaFI.framework */,
+				D87277918DA7BD351651DF2A /* Pods_WaFITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F20D080BD7541E97FA0BAAA9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A7270B5EA03BF1A497723D6F /* Pods-WaFI.debug.xcconfig */,
+				CA150B9BE7018974791264C6 /* Pods-WaFI.release.xcconfig */,
+				26C159051202692732BB611C /* Pods-WaFITests.debug.xcconfig */,
+				8550C3FB667648613CA349C8 /* Pods-WaFITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -115,9 +159,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 522E494220C4C74100AE1093 /* Build configuration list for PBXNativeTarget "WaFI" */;
 			buildPhases = (
+				33D18A02CEA9D2C752D771A9 /* [CP] Check Pods Manifest.lock */,
 				522E492120C4C74000AE1093 /* Sources */,
 				522E492220C4C74000AE1093 /* Frameworks */,
 				522E492320C4C74000AE1093 /* Resources */,
+				BD53ED1B10407E2F1C5CE9BE /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -132,6 +178,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 522E494520C4C74100AE1093 /* Build configuration list for PBXNativeTarget "WaFITests" */;
 			buildPhases = (
+				79D95D146B334AD870CA71C1 /* [CP] Check Pods Manifest.lock */,
 				522E493520C4C74100AE1093 /* Sources */,
 				522E493620C4C74100AE1093 /* Frameworks */,
 				522E493720C4C74100AE1093 /* Resources */,
@@ -190,6 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				522E493320C4C74100AE1093 /* LaunchScreen.storyboard in Resources */,
+				522E495520C9E21100AE1093 /* GoogleService-Info.plist in Resources */,
 				522E493020C4C74100AE1093 /* Assets.xcassets in Resources */,
 				522E492E20C4C74000AE1093 /* Main.storyboard in Resources */,
 			);
@@ -204,12 +252,76 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		33D18A02CEA9D2C752D771A9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WaFI-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		79D95D146B334AD870CA71C1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WaFITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BD53ED1B10407E2F1C5CE9BE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-WaFI/Pods-WaFI-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WaFI/Pods-WaFI-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		522E492120C4C74000AE1093 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5266420720CA145C00AE2DD9 /* ResetPasswordViewController.swift in Sources */,
+				5266420320CA019A00AE2DD9 /* SignInViewController.swift in Sources */,
 				522E495320C58DE900AE1093 /* PickerViewController.swift in Sources */,
+				5266420520CA144900AE2DD9 /* SignUpViewController.swift in Sources */,
 				522E494D20C56B7B00AE1093 /* Event.swift in Sources */,
 				522E492B20C4C74000AE1093 /* ViewController.swift in Sources */,
 				522E494F20C56CDD00AE1093 /* EventTableViewCell.swift in Sources */,
@@ -372,6 +484,7 @@
 		};
 		522E494320C4C74100AE1093 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A7270B5EA03BF1A497723D6F /* Pods-WaFI.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -389,6 +502,7 @@
 		};
 		522E494420C4C74100AE1093 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA150B9BE7018974791264C6 /* Pods-WaFI.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -406,6 +520,7 @@
 		};
 		522E494620C4C74100AE1093 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 26C159051202692732BB611C /* Pods-WaFITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -426,6 +541,7 @@
 		};
 		522E494720C4C74100AE1093 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8550C3FB667648613CA349C8 /* Pods-WaFITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";

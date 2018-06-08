@@ -18,86 +18,94 @@ class EventTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // show edit button
         self.navigationItem.leftBarButtonItem = self.editButtonItem
-        // Load any saved meals, otherwise load sample data.
+        // Load any saved events if available or load example events
         if let savedEvents = loadEvents() {
             events += savedEvents
         } else {
-            //Load the three sample events if no events saved
             loadSampleEvents()
         }
         
-        
-
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
     }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
+    //----------------------------------------------------------------
+    
 
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return events.count
     }
     
+    
+    
+    //----------------------------------------------------------------
+    
+    
+    
+    
     //MARK: Actions
     @IBAction func unwindToEventList(sender: UIStoryboardSegue) {
-        
+        //make sure coming from viewcontroller scene
         if let sourceViewController = sender.source as? ViewController, let event = sourceViewController.event {
-            
+            //make sure to update if editing event, or add new if new event
             if let selectedIndexPath = tableView.indexPathForSelectedRow {
-                // Update an existing meal.
+                //update event and table
                 events[selectedIndexPath.row] = event
                 tableView.reloadRows(at: [selectedIndexPath], with: .none)
             } else {
                 // Add a new meal.
                 let newIndexPath = IndexPath(row: events.count, section: 0)
-                
+                //append to event list and insert to table
                 events.append(event)
                 tableView.insertRows(at: [newIndexPath], with: .automatic)
             }
+            //save all showed events
             saveEvents()
         }
     }
     
     
+    
+    
+    
+    //----------------------------------------------------------------
+    
+    
+    
+    
+    
     //MARK: Private Methods
     
     private func loadSampleEvents() {
-        
+        //load sample photos for sample events
         let photo1 = UIImage(named: "event1")
         let photo2 = UIImage(named: "event2")
         let photo3 = UIImage(named: "event3")
-        
+        //create sample events
         guard let event1 = Event(name: "Graduation", photo: photo1, date:Date()) else {
             fatalError("Unable to instantiate event1")
         }
-        
         guard let event2 = Event(name: "Work", photo: photo2, date:Date()) else {
             fatalError("Unable to instantiate event2")
         }
-        
         guard let event3 = Event(name: "Death", photo: photo3, date:Date()) else {
             fatalError("Unable to instantiate event3")
         }
-        
+        //add sample events to event list
         events += [event1, event2, event3]
-        
-        
     }
     
 
