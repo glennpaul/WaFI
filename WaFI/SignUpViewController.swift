@@ -44,7 +44,7 @@ class SignUpViewController: UIViewController {
                     print("You have successfully signed up")
                     
                     //goes to home once complete
-                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "Home")
+                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "startingNavigation")
                     self.present(vc!, animated: true, completion: nil)
                 //if not both set, alert user
                 } else {
@@ -57,7 +57,6 @@ class SignUpViewController: UIViewController {
         }
     }
     
-    //MARK: Actions
     
     
 

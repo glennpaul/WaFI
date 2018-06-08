@@ -9,6 +9,9 @@
 import UIKit
 import os.log
 
+import Firebase
+import FirebaseAuth
+
 class EventTableViewController: UITableViewController {
 
     
@@ -19,7 +22,7 @@ class EventTableViewController: UITableViewController {
         super.viewDidLoad()
         
         // show edit button
-        self.navigationItem.leftBarButtonItem = self.editButtonItem
+        self.navigationItem.rightBarButtonItem = self.editButtonItem
         // Load any saved events if available or load example events
         if let savedEvents = loadEvents() {
             events += savedEvents
@@ -74,6 +77,18 @@ class EventTableViewController: UITableViewController {
             }
             //save all showed events
             saveEvents()
+        }
+    }
+    @IBAction func logOut(_ sender: UIBarButtonItem) {
+        if Auth.auth().currentUser != nil {
+            do {
+                try Auth.auth().signOut()
+                let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "signInPage")
+                present(vc, animated: true, completion: nil)
+                
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
         }
     }
     

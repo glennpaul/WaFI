@@ -8,8 +8,14 @@
 
 import UIKit
 
-class ResetPasswordViewController: UIViewController {
+import Firebase
+import FirebaseAuth
 
+class ResetPasswordViewController: UIViewController {
+    
+    //MARK: Properties
+    @IBOutlet weak var emailEditText: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -22,6 +28,43 @@ class ResetPasswordViewController: UIViewController {
     }
     
 
+    //MARK: Actions
+    @IBAction func resetPassword(_ sender: UIButton) {
+        if self.emailEditText.text == "" {
+            let alertController = UIAlertController(title: "Oops!", message: "Please enter an email.", preferredStyle: .alert)
+            
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            
+            present(alertController, animated: true, completion: nil)
+            
+        } else {
+            Auth.auth().sendPasswordReset(withEmail: self.emailEditText.text!, completion: { (error) in
+                
+                var title = "Password reset"
+                var message = "Password reset was requested for this email for the WaFI app"
+                
+                if error != nil {
+                    title = "Error!"
+                    message = (error?.localizedDescription)!
+                } else {
+                    title = "Success!"
+                    message = "Password reset email sent."
+                    self.emailEditText.text = ""
+                }
+                
+                let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+                
+                let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                alertController.addAction(defaultAction)
+                
+                self.present(alertController, animated: true, completion: nil)
+            })
+        }
+    }
+    
+    
+    
     /*
     // MARK: - Navigation
 
