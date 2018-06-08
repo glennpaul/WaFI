@@ -1,0 +1,6 @@
+framework module Pods_WaFITests {
+  umbrella header "Pods-WaFITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
