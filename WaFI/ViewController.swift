@@ -22,9 +22,9 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         editText.delegate = self
         updateSaveButtonState()
-        
         
         if let event = event {
             navigationItem.title = event.name
@@ -37,7 +37,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
             let newDate = timeFormatter.string(from:event.date)  + " on " + dateFormatter.string(from: event.date) //pass Date here
             
             dateTimeLabel.text = newDate
-            
             updateSaveButtonState()
         }
     }
@@ -46,6 +45,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         // Dispose of any resources that can be recreated.
     }
     
+    
+    //----------------------------------------------------------------
     
     
     //MARK: PickerviewControllerDelegate
@@ -65,6 +66,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
     
     
     
+    //----------------------------------------------------------------
+    
     
     //MARK: UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -72,7 +75,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         textField.resignFirstResponder()
         return true
     }
-    
     func textFieldDidEndEditing(_ textField: UITextField) {
         updateSaveButtonState()
         navigationItem.title = textField.text
@@ -82,6 +84,10 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         // Disable the Save button while editing.
         saveButton.isEnabled = false
     }
+    
+    
+    //----------------------------------------------------------------
+    
     
     //MARK: UIImagePickerControllerDelegate
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -103,6 +109,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         dismiss(animated: true, completion: nil)
     }
     
+    
+    //----------------------------------------------------------------
     
     
     //MARK: Actions
@@ -144,6 +152,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         present(imagePickerController, animated: true, completion: nil)
     }
     
+    
+    //----------------------------------------------------------------
     
     
     //MARK: Private Methods

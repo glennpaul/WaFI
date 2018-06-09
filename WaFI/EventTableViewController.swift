@@ -16,8 +16,6 @@ import Foundation
 import FirebaseDatabase
 
 class EventTableViewController: UITableViewController {
-
-    
     
     //MARK: Properties
     var events = [Event]()
@@ -37,15 +35,7 @@ class EventTableViewController: UITableViewController {
         }
         
         //save event names to db
-        for (index,event) in events.enumerated() {
-            //print(index)
-            let thisEvent = [
-                "name":event.name,
-            ]
-            let insertNode = ["\(index + 1)":thisEvent]
-            self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
-        }
-        
+        saveEventsToDatabase()
         
         
         // Uncomment the following line to preserve selection between presentations
@@ -59,25 +49,6 @@ class EventTableViewController: UITableViewController {
     
     
     //----------------------------------------------------------------
-    
-
-    // MARK: - Table view data source
-    
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return events.count
-    }
-    
-    
-    
-    //----------------------------------------------------------------
-    
-    
     
     
     //MARK: Actions
@@ -98,8 +69,9 @@ class EventTableViewController: UITableViewController {
                 events.append(event)
                 tableView.insertRows(at: [newIndexPath], with: .automatic)
             }
-            //save all showed events
+            //save all showed events to phone and db
             saveEvents()
+            saveEventsToDatabase()
         }
     }
     @IBAction func logOut(_ sender: UIBarButtonItem) {
@@ -108,7 +80,6 @@ class EventTableViewController: UITableViewController {
                 try Auth.auth().signOut()
                 let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "signInPage")
                 present(vc, animated: true, completion: nil)
-                
             } catch let error as NSError {
                 print(error.localizedDescription)
             }
@@ -116,17 +87,92 @@ class EventTableViewController: UITableViewController {
     }
     
     
+    //----------------------------------------------------------------
     
+    
+    
+    // MARK: Table view data source
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 1
+    }
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete implementation, return the number of rows
+        return events.count
+    }
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // Table view cells are reused and should be dequeued using a cell identifier.
+        let cellIdentifier = "EventTableViewCell"
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? EventTableViewCell  else {
+            fatalError("The dequeued cell is not an instance of MealTableViewCell.")
+        }
+        // Fetches the appropriate meal for the data source layout.
+        let event = events[indexPath.row]
+        //create date formatter for date conversion into string
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        //set values in cells
+        cell.eventName.text = event.name
+        cell.eventImage.image = event.photo
+        cell.eventDetail.text = formatter.string(from: event.date)
+        return cell
+    }
+    // Override to support conditional editing of the table view.
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the specified item to be editable.
+        return true
+    }
+    // Override to support editing the table view.
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            // Delete the row from the data source
+            events.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            saveEvents()
+        } else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        }    
+    }
+    
+    
+    //----------------------------------------------------------------
+    
+    
+    // MARK: Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        super.prepare(for: segue, sender: sender)
+        
+        switch(segue.identifier ?? "") {
+        case "addEvent":
+            os_log("Adding a new meal.", log: OSLog.default, type: .debug)
+        case "showEvent":
+            guard let ViewController = segue.destination as? ViewController else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
+            guard let selectedEventCell = sender as? EventTableViewCell else {
+                fatalError("Unexpected sender: \(String(describing: sender))")
+            }
+            guard let indexPath = tableView.indexPath(for: selectedEventCell) else {
+                fatalError("The selected cell is not being displayed by the table")
+            }
+            let selectedEvent = events[indexPath.row]
+            ViewController.event = selectedEvent
+        default:
+            fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
+        }
+    }
     
     
     //----------------------------------------------------------------
     
     
     
-    
-    
-    //MARK: Private Methods
-    
+    //MARK: Private functions
     private func loadSampleEvents() {
         //load sample photos for sample events
         let photo1 = UIImage(named: "event1")
@@ -144,107 +190,7 @@ class EventTableViewController: UITableViewController {
         }
         //add sample events to event list
         events += [event1, event2, event3]
-        
     }
-    
-
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        // Table view cells are reused and should be dequeued using a cell identifier.
-        let cellIdentifier = "EventTableViewCell"
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? EventTableViewCell  else {
-            fatalError("The dequeued cell is not an instance of MealTableViewCell.")
-        }
-        
-        // Fetches the appropriate meal for the data source layout.
-        let event = events[indexPath.row]
-        
-        //create date formatter for date conversion into string
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        
-        //set values in cells
-        cell.eventName.text = event.name
-        cell.eventImage.image = event.photo
-        cell.eventDetail.text = formatter.string(from: event.date)
-        
-        return cell
-    }
-
-    
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
- 
-
-    
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            events.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            saveEvents()
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        super.prepare(for: segue, sender: sender)
-        
-        switch(segue.identifier ?? "") {
-            
-        case "addEvent":
-            os_log("Adding a new meal.", log: OSLog.default, type: .debug)
-            
-        case "showEvent":
-            guard let ViewController = segue.destination as? ViewController else {
-                fatalError("Unexpected destination: \(segue.destination)")
-            }
-            
-            guard let selectedEventCell = sender as? EventTableViewCell else {
-                fatalError("Unexpected sender: \(String(describing: sender))")
-            }
-            
-            guard let indexPath = tableView.indexPath(for: selectedEventCell) else {
-                fatalError("The selected cell is not being displayed by the table")
-            }
-            
-            let selectedEvent = events[indexPath.row]
-            ViewController.event = selectedEvent
-            
-        default:
-            fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
-        }
-    }
-    
-    //MARK: Private functions
     private func saveEvents() {
         let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(events, toFile: Event.ArchiveURL.path)
         if isSuccessfulSave {
@@ -255,6 +201,16 @@ class EventTableViewController: UITableViewController {
     }
     private func loadEvents() -> [Event]? {
         return NSKeyedUnarchiver.unarchiveObject(withFile: Event.ArchiveURL.path) as? [Event]
+    }
+    private func saveEventsToDatabase() {
+        for (index,event) in events.enumerated() {
+            //print(index)
+            let thisEvent = [
+                "name":event.name,
+                ]
+            let insertNode = ["\(index + 1)":thisEvent]
+            self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
+        }
     }
  
 

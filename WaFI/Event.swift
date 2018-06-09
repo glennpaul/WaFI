@@ -17,8 +17,6 @@ class Event: NSObject, NSCoding {
     static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
     static let ArchiveURL = DocumentsDirectory.appendingPathComponent("events")
     
-    
-    
     //MARK: Properties
     var name: String
     var photo: UIImage?
@@ -30,19 +28,15 @@ class Event: NSObject, NSCoding {
         static let date = "date"
     }
     
-    
     init?(name: String, photo: UIImage?, date: Date) {
-        
         // Initialization should fail if there is no name or if the rating is negative.
         if name.isEmpty  {
             return nil
         }
-        
         // Initialize stored properties.
         self.name = name
         self.photo = photo
         self.date = date
-        
     }
     
     //MARK: NSCoding
@@ -52,21 +46,16 @@ class Event: NSObject, NSCoding {
         aCoder.encode(date, forKey: PropertyKey.date)
     }
     required convenience init?(coder aDecoder: NSCoder) {
-        
         // The name is required. If we cannot decode a name string, the initializer should fail.
         guard let name = aDecoder.decodeObject(forKey: PropertyKey.name) as? String else {
             os_log("Unable to decode the name for a Event object.", log: OSLog.default, type: .debug)
             return nil
         }
-        
         // Because photo is an optional property of Meal, just use conditional cast.
         let photo = aDecoder.decodeObject(forKey: PropertyKey.photo) as? UIImage
-        
         let date = aDecoder.decodeObject(forKey: PropertyKey.date) as? Date
-        
         // Must call designated initializer.
         self.init(name: name, photo: photo, date: date!)
-        
     }
     
 }
