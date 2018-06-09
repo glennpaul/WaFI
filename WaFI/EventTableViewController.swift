@@ -36,7 +36,17 @@ class EventTableViewController: UITableViewController {
             loadSampleEvents()
         }
         
-        self.ref.child("users").child(currentUser.uid).setValue(["email": currentUser.email])
+        //save event names to db
+        for (index,event) in events.enumerated() {
+            //print(index)
+            let thisEvent = [
+                "name":event.name,
+            ]
+            let insertNode = ["\(index + 1)":thisEvent]
+            self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
+        }
+        
+        
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -52,6 +62,8 @@ class EventTableViewController: UITableViewController {
     
 
     // MARK: - Table view data source
+    
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
@@ -69,6 +81,8 @@ class EventTableViewController: UITableViewController {
     
     
     //MARK: Actions
+    
+    
     @IBAction func unwindToEventList(sender: UIStoryboardSegue) {
         //make sure coming from viewcontroller scene
         if let sourceViewController = sender.source as? ViewController, let event = sourceViewController.event {
@@ -130,6 +144,7 @@ class EventTableViewController: UITableViewController {
         }
         //add sample events to event list
         events += [event1, event2, event3]
+        
     }
     
 
