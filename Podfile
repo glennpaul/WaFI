@@ -10,6 +10,7 @@ target 'WaFI' do
   # Pods for WaFI
 	pod 'Firebase/Core'
 	pod 'Firebase/Auth'
+	pod 'Firebase/Database'
 
   target 'WaFITests' do
     inherit! :search_paths

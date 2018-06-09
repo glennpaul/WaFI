@@ -12,11 +12,17 @@ import os.log
 import Firebase
 import FirebaseAuth
 
+import Foundation
+import FirebaseDatabase
+
 class EventTableViewController: UITableViewController {
 
     
+    
     //MARK: Properties
     var events = [Event]()
+    var currentUser:User = Auth.auth().currentUser!
+    var ref: DatabaseReference! = Database.database().reference()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,8 +36,11 @@ class EventTableViewController: UITableViewController {
             loadSampleEvents()
         }
         
+        self.ref.child("users").child(currentUser.uid).setValue(["email": currentUser.email])
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
+        
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
