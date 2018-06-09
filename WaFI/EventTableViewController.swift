@@ -9,12 +9,11 @@
 import UIKit
 import os.log
 
-import Firebase
-import FirebaseAuth
 
 import Foundation
+import Firebase
+import FirebaseAuth
 import FirebaseDatabase
-
 import FirebaseStorage
 
 class EventTableViewController: UITableViewController {
@@ -30,6 +29,17 @@ class EventTableViewController: UITableViewController {
         // show edit button
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         // Load any saved events if available or load example events
+        print(currentUser.uid)
+        ref.child("events_count").child(currentUser.uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            //if snapshot.value as? Int != 0 && snapshot.value != nil {
+                print("load events from db")
+            
+            self.loadEventsFromFirebase()
+            //}
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+        
         if let savedEvents = loadEvents() {
             events += savedEvents
         } else {
@@ -38,11 +48,6 @@ class EventTableViewController: UITableViewController {
         
         //save event names to db
         saveEventsToDatabase()
-        
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -201,6 +206,55 @@ class EventTableViewController: UITableViewController {
     private func loadEvents() -> [Event]? {
         return NSKeyedUnarchiver.unarchiveObject(withFile: Event.ArchiveURL.path) as? [Event]
     }
+    private func loadEventsFromFirebase() {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "h:mm a MMM d, yyyy " //date format
+        let defaultPhoto = UIImage(named: "defaultPhoto")
+        guard let tempEvent = Event(name: "tempName", photo: defaultPhoto, date:Date()) else {
+            fatalError("Unable to instantiate temporary event")
+        }
+        
+        //for index in 1...6 {
+        //    print(index)
+        //}
+        
+        
+        ref.child("users").child(currentUser.uid).child("1").child("name").observeSingleEvent(of: .value, with: { (snapshot) in
+            if snapshot.value as? Int != 0 && snapshot.value != nil {
+                tempEvent.name = snapshot.value! as! String
+                //set image
+                let storageRef = Storage.storage().reference()
+                let reference = storageRef.child("\(self.currentUser.uid)_\(tempEvent.name)_image.png")
+                
+                reference.getData(maxSize: 100 * 1024 * 1024) { (data, error) -> Void in
+                    if (error != nil) {
+                        print(error!)
+                    } else {
+                        tempEvent.photo = UIImage(data: data!)
+                    }
+                }
+                self.ref.child("users").child(self.currentUser.uid).child("1").child("date").observeSingleEvent(of: .value, with: { (snapshot) in
+                    if snapshot.value != nil {
+                        tempEvent.date = dateFormatter.date(from: snapshot.value as! String)!
+                    }
+                }) { (error) in
+                    print(error.localizedDescription)
+                }
+            }
+            self.events.append(tempEvent)
+            
+            self.tableView.beginUpdates()
+            self.tableView.insertRows(at: [IndexPath(row: self.events.count-1, section: 0)], with: .automatic)
+            self.tableView.endUpdates()
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+    
+    }
+    
+    
+    //MARK: Database and Storage Functions
     private func saveEventsToDatabase() {
         for (index,event) in events.enumerated() {
             //print(index)
@@ -214,7 +268,7 @@ class EventTableViewController: UITableViewController {
             
             let thisEvent = [
                 "name":event.name,
-                "date": timeFormatter.string(from: (event.date))  + " on " + dateFormatter.string(from: (event.date))
+                "date": timeFormatter.string(from: (event.date))  + " " + dateFormatter.string(from: (event.date))
                 ]
             let insertNode = ["\(index + 1)":thisEvent]
             self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
@@ -229,12 +283,12 @@ class EventTableViewController: UITableViewController {
         let data = UIImageJPEGRepresentation(thisEvent.photo!, 1)
         let imageRef = thisRef.child("\(currentUser.uid)_\(thisEvent.name)_image.png")
         _ = imageRef.putData(data!, metadata:nil,completion:{(metadata,error)
-            in guard let metadata = metadata else {
+            in guard metadata != nil else {
                 print(error!)
                 return
             }
-            let downloadURL = metadata.path
-            print(downloadURL!)
+            //let downloadURL = metadata.path
+            //print(downloadURL!)
             
         })
         
