@@ -20,16 +20,10 @@ class PickerViewController: UIViewController {
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var dateTimeLabel: UILabel!
     
-    
     weak var delegate: PickerViewControllerDelegate?
     var event: Event?
     var time:String! = "4:20 AM"
     var date:String! = "03/14/95"
-    
-    
-    
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,7 +45,7 @@ class PickerViewController: UIViewController {
     
     
     
-    
+    //----------------------------------------------------------------
     
     
     //MARK: Actions
@@ -86,10 +80,9 @@ class PickerViewController: UIViewController {
     }
     
     
-    
+    //----------------------------------------------------------------
     
 
-    
     // MARK: - Navigation
     @IBAction func cancel(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)

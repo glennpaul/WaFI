@@ -11,6 +11,7 @@ target 'WaFI' do
 	pod 'Firebase/Core'
 	pod 'Firebase/Auth'
 	pod 'Firebase/Database'
+	pod 'Firebase/Storage'
 
   target 'WaFITests' do
     inherit! :search_paths

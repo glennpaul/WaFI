@@ -15,12 +15,14 @@ import FirebaseAuth
 import Foundation
 import FirebaseDatabase
 
+import FirebaseStorage
+
 class EventTableViewController: UITableViewController {
     
     //MARK: Properties
     var events = [Event]()
     var currentUser:User = Auth.auth().currentUser!
-    var ref: DatabaseReference! = Database.database().reference()
+    let ref: DatabaseReference! = Database.database().reference()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -167,10 +169,7 @@ class EventTableViewController: UITableViewController {
         }
     }
     
-    
     //----------------------------------------------------------------
-    
-    
     
     //MARK: Private functions
     private func loadSampleEvents() {
@@ -205,13 +204,40 @@ class EventTableViewController: UITableViewController {
     private func saveEventsToDatabase() {
         for (index,event) in events.enumerated() {
             //print(index)
+            
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMM d, yyyy" //date format
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "h:mm a" //time format
+            
+            
             let thisEvent = [
                 "name":event.name,
+                "date": timeFormatter.string(from: (event.date))  + " on " + dateFormatter.string(from: (event.date))
                 ]
             let insertNode = ["\(index + 1)":thisEvent]
             self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
+            
+            
+            let storage = Storage.storage()
+            let storageRef = storage.reference()
+            uploadImage(event,storageRef)
         }
     }
- 
+    func uploadImage(_ thisEvent:Event,_ thisRef:StorageReference) {
+        let data = UIImageJPEGRepresentation(thisEvent.photo!, 1)
+        let imageRef = thisRef.child("\(currentUser.uid)_\(thisEvent.name)_image.png")
+        _ = imageRef.putData(data!, metadata:nil,completion:{(metadata,error)
+            in guard let metadata = metadata else {
+                print(error!)
+                return
+            }
+            let downloadURL = metadata.path
+            print(downloadURL!)
+            
+        })
+        
+    }
 
 }
