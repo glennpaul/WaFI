@@ -34,35 +34,22 @@ class EventTableViewController: UITableViewController {
         
         let waitline = DispatchGroup()
         waitline.enter()
-        
-        // avoid deadlocks by not using .main queue here
         DispatchQueue.main.async {
             self.grabEvent { (temp) in
-                
                 if let temp = temp {
                     self.events = temp
-                    print(self.events[0].name)
                     self.tableView.beginUpdates()
-                    print(self.events.count)
                     for index in 0..<self.events.count {
-                        print()
                         self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
                     }
-                    //self.tableView.insertRows(at: [IndexPath(row: self.events.count-1, section: 0)], with: .automatic)
                     self.tableView.endUpdates()
                     waitline.leave()
                 }
             }
         }
-        
         waitline.notify(queue: .main) {
             self.timeGrabPhotos()
         }
-        
-        
-        
-        
-        
         
     }
     override func didReceiveMemoryWarning() {
@@ -259,11 +246,10 @@ class EventTableViewController: UITableViewController {
                 for index in 0..<self.events.count {
                     print("setting even photo for event \(self.events[index].name)")
                     self.events[index].photo = photo[index]
+                    self.tableView.reloadData()
                 }
-                self.tableView.reloadData()
             }
         }
-        self.tableView.reloadData()
     }
     func grabPhoto(_ temp:[Event], completionImage: @escaping ([UIImage]?) -> Void) {
         
@@ -291,7 +277,6 @@ class EventTableViewController: UITableViewController {
         secondline.notify(queue: .main) {
             print("image passed back and view reloaded")
             completionImage(photoImage)
-            self.tableView.reloadData()
         }
         
     }
