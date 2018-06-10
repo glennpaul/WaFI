@@ -48,7 +48,7 @@ class EventTableViewController: UITableViewController {
             }
         }
         waitline.notify(queue: .main) {
-            self.timeGrabPhotos()
+            self.updateTableWithPhotos()
         }
         
     }
@@ -81,7 +81,7 @@ class EventTableViewController: UITableViewController {
                 tableView.insertRows(at: [newIndexPath], with: .automatic)
             }
             //save all showed events to db
-            //saveEventsToDatabase()
+            saveEventsToDatabase()
         }
     }
     @IBAction func logOut(_ sender: UIBarButtonItem) {
@@ -143,7 +143,7 @@ class EventTableViewController: UITableViewController {
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }
-        //saveEventsToDatabase()
+        saveEventsToDatabase()
     }
     
     
@@ -180,7 +180,6 @@ class EventTableViewController: UITableViewController {
     //----------------------------------------------------------------
    
     //MARK: Database and Storage Functions
-    /*
     private func saveEventsToDatabase() {
         for (index,event) in events.enumerated() {
             let dateFormatter = DateFormatter()
@@ -198,13 +197,26 @@ class EventTableViewController: UITableViewController {
             let storage = Storage.storage()
             let storageRef = storage.reference()
             uploadImage(events[index],storageRef)
-            print("saved \(events[index].name)")
+            //print("saved \(events[index].name)")
             self.ref.child("events_count/").setValue(["\(currentUser.uid)":index])
-            print("saving index: \(index) with event \(events[index].name)")
+            //print("saving index: \(index) with event \(events[index].name)")
         }
+        print("completed save to firebase")
     }
-    */
-    
+    func uploadImage(_ thisEvent:Event,_ thisRef:StorageReference) {
+        let data = UIImageJPEGRepresentation(thisEvent.photo!, 1)
+        let imageRef = thisRef.child("\(currentUser.uid)_\(thisEvent.name)_image.png")
+        _ = imageRef.putData(data!, metadata:nil,completion:{(metadata,error)
+            in guard let metadata = metadata else {
+                print(error!)
+                return
+            }
+            let downloadURL = metadata.path
+            print(downloadURL!)
+            
+        })
+        
+    }
     //MARK: Completion handlers
     func grabEvent(completion: @escaping ([Event]?) -> Void) {
         
@@ -231,20 +243,19 @@ class EventTableViewController: UITableViewController {
                 }
                 temp.name = eventName
                 temp.date = dateFormatter.date(from: eventDate)!
-                
                 eventArray.append(temp)
             }
             completion(eventArray)
         })
     }
     
-    func timeGrabPhotos() {
+    func updateTableWithPhotos() {
         print("timegrabphoto called")
         grabPhoto(self.events) { (photo) in
             print("getphoto finished")
             if let photo = photo {
                 for index in 0..<self.events.count {
-                    print("setting even photo for event \(self.events[index].name)")
+                    //print("setting even photo for event \(self.events[index].name)")
                     self.events[index].photo = photo[index]
                     self.tableView.reloadData()
                 }
@@ -259,7 +270,7 @@ class EventTableViewController: UITableViewController {
             secondline.enter()
         }
         
-        print("getphoto called")
+        //print("getphoto called")
         let storageRef = Storage.storage().reference()
         var photoImage = [UIImage]()
         for i in 0..<temp.count {
@@ -268,14 +279,14 @@ class EventTableViewController: UITableViewController {
                 if (error != nil) {
                     print(error!)
                 } else {
-                    print("image grabbed")
+                    //print("image grabbed")
                     photoImage.append(UIImage(data: data!)!)
                     secondline.leave()
                 }
             }
         }
         secondline.notify(queue: .main) {
-            print("image passed back and view reloaded")
+            //print("image passed back")
             completionImage(photoImage)
         }
         
