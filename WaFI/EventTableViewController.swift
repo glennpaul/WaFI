@@ -253,36 +253,39 @@ class EventTableViewController: UITableViewController {
     
     func timeGrabPhotos() {
         print("timegrabphoto called")
-        grabPhoto(self.events[self.events.count-1]) { (photo) in
-            print("getphoto finished with event \(self.events[self.events.count-1].name)")
+        grabPhoto(self.events) { (photo) in
+            print("getphoto finished")
             if let photo = photo {
                 for index in 0..<self.events.count {
                     print("setting even photo for event \(self.events[index].name)")
-                    self.events[index].photo = photo
+                    self.events[index].photo = photo[index]
                 }
                 self.tableView.reloadData()
             }
         }
         self.tableView.reloadData()
     }
-    func grabPhoto(_ temp:Event, completionImage: @escaping (UIImage?) -> Void) {
+    func grabPhoto(_ temp:[Event], completionImage: @escaping ([UIImage]?) -> Void) {
         
-        
+        //setup GCD
         let secondline = DispatchGroup()
-        secondline.enter()
+        for _ in 0..<temp.count {
+            secondline.enter()
+        }
         
         print("getphoto called")
         let storageRef = Storage.storage().reference()
-        let defaultPhoto = UIImage(named: "defaultPhoto")
-        var photoImage:UIImage = defaultPhoto!
-        let reference = storageRef.child("\(self.currentUser.uid)_\(temp.name)_image.png")
-        reference.getData(maxSize: 10000000 * 1024 * 1024) { (data, error) -> Void in
-            if (error != nil) {
-                print(error!)
-            } else {
-                print("image grabbed")
-                photoImage = UIImage(data: data!)!
-                secondline.leave()
+        var photoImage = [UIImage]()
+        for i in 0..<temp.count {
+            let reference = storageRef.child("\(self.currentUser.uid)_\(temp[i].name)_image.png")
+            reference.getData(maxSize: 10000000 * 1024 * 1024) { (data, error) -> Void in
+                if (error != nil) {
+                    print(error!)
+                } else {
+                    print("image grabbed")
+                    photoImage.append(UIImage(data: data!)!)
+                    secondline.leave()
+                }
             }
         }
         secondline.notify(queue: .main) {
