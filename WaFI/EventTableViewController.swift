@@ -30,24 +30,40 @@ class EventTableViewController: UITableViewController {
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         // Load any saved events if available or load example events
         print(currentUser.uid)
-        ref.child("events_count").child(currentUser.uid).observeSingleEvent(of: .value, with: { (snapshot) in
-            //if snapshot.value as? Int != 0 && snapshot.value != nil {
-                print("load events from db")
-            
-            self.loadEventsFromFirebase()
-            //}
-        }) { (error) in
-            print(error.localizedDescription)
+        
+        
+        let waitline = DispatchGroup()
+        waitline.enter()
+        
+        // avoid deadlocks by not using .main queue here
+        DispatchQueue.main.async {
+            self.grabEvent { (temp) in
+                
+                if let temp = temp {
+                    self.events = temp
+                    print(self.events[0].name)
+                    self.tableView.beginUpdates()
+                    print(self.events.count)
+                    for index in 0..<self.events.count {
+                        print()
+                        self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                    }
+                    //self.tableView.insertRows(at: [IndexPath(row: self.events.count-1, section: 0)], with: .automatic)
+                    self.tableView.endUpdates()
+                    waitline.leave()
+                }
+            }
         }
         
-        if let savedEvents = loadEvents() {
-            events += savedEvents
-        } else {
-            loadSampleEvents()
+        waitline.notify(queue: .main) {
+            self.timeGrabPhotos()
         }
         
-        //save event names to db
-        saveEventsToDatabase()
+        
+        
+        
+        
+        
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -56,8 +72,9 @@ class EventTableViewController: UITableViewController {
     
     
     //----------------------------------------------------------------
-    
-    
+
+
+
     //MARK: Actions
     
     
@@ -76,9 +93,8 @@ class EventTableViewController: UITableViewController {
                 events.append(event)
                 tableView.insertRows(at: [newIndexPath], with: .automatic)
             }
-            //save all showed events to phone and db
-            saveEvents()
-            saveEventsToDatabase()
+            //save all showed events to db
+            //saveEventsToDatabase()
         }
     }
     @IBAction func logOut(_ sender: UIBarButtonItem) {
@@ -137,10 +153,10 @@ class EventTableViewController: UITableViewController {
             // Delete the row from the data source
             events.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
-            saveEvents()
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
+        //saveEventsToDatabase()
     }
     
     
@@ -175,123 +191,107 @@ class EventTableViewController: UITableViewController {
     }
     
     //----------------------------------------------------------------
-    
-    //MARK: Private functions
-    private func loadSampleEvents() {
-        //load sample photos for sample events
-        let photo1 = UIImage(named: "event1")
-        let photo2 = UIImage(named: "event2")
-        let photo3 = UIImage(named: "event3")
-        //create sample events
-        guard let event1 = Event(name: "Graduation", photo: photo1, date:Date()) else {
-            fatalError("Unable to instantiate event1")
-        }
-        guard let event2 = Event(name: "Work", photo: photo2, date:Date()) else {
-            fatalError("Unable to instantiate event2")
-        }
-        guard let event3 = Event(name: "Death", photo: photo3, date:Date()) else {
-            fatalError("Unable to instantiate event3")
-        }
-        //add sample events to event list
-        events += [event1, event2, event3]
-    }
-    private func saveEvents() {
-        let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(events, toFile: Event.ArchiveURL.path)
-        if isSuccessfulSave {
-            os_log("Events successfully saved.", log: OSLog.default, type: .debug)
-        } else {
-            os_log("Failed to save events...", log: OSLog.default, type: .error)
-        }
-    }
-    private func loadEvents() -> [Event]? {
-        return NSKeyedUnarchiver.unarchiveObject(withFile: Event.ArchiveURL.path) as? [Event]
-    }
-    private func loadEventsFromFirebase() {
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "h:mm a MMM d, yyyy " //date format
-        let defaultPhoto = UIImage(named: "defaultPhoto")
-        guard let tempEvent = Event(name: "tempName", photo: defaultPhoto, date:Date()) else {
-            fatalError("Unable to instantiate temporary event")
-        }
-        
-        //for index in 1...6 {
-        //    print(index)
-        //}
-        
-        
-        ref.child("users").child(currentUser.uid).child("1").child("name").observeSingleEvent(of: .value, with: { (snapshot) in
-            if snapshot.value as? Int != 0 && snapshot.value != nil {
-                tempEvent.name = snapshot.value! as! String
-                //set image
-                let storageRef = Storage.storage().reference()
-                let reference = storageRef.child("\(self.currentUser.uid)_\(tempEvent.name)_image.png")
-                
-                reference.getData(maxSize: 100 * 1024 * 1024) { (data, error) -> Void in
-                    if (error != nil) {
-                        print(error!)
-                    } else {
-                        tempEvent.photo = UIImage(data: data!)
-                    }
-                }
-                self.ref.child("users").child(self.currentUser.uid).child("1").child("date").observeSingleEvent(of: .value, with: { (snapshot) in
-                    if snapshot.value != nil {
-                        tempEvent.date = dateFormatter.date(from: snapshot.value as! String)!
-                    }
-                }) { (error) in
-                    print(error.localizedDescription)
-                }
-            }
-            self.events.append(tempEvent)
-            
-            self.tableView.beginUpdates()
-            self.tableView.insertRows(at: [IndexPath(row: self.events.count-1, section: 0)], with: .automatic)
-            self.tableView.endUpdates()
-        }) { (error) in
-            print(error.localizedDescription)
-        }
-    
-    }
-    
-    
+   
     //MARK: Database and Storage Functions
+    /*
     private func saveEventsToDatabase() {
         for (index,event) in events.enumerated() {
-            //print(index)
-            
-            
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMM d, yyyy" //date format
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "h:mm a" //time format
             
-            
             let thisEvent = [
-                "name":event.name,
-                "date": timeFormatter.string(from: (event.date))  + " " + dateFormatter.string(from: (event.date))
+                "name":events[index].name,
+                "date": timeFormatter.string(from: (events[index].date))  + " " + dateFormatter.string(from: (events[index].date))
                 ]
-            let insertNode = ["\(index + 1)":thisEvent]
+            let insertNode = ["\(index+1)":thisEvent]
             self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
-            
             
             let storage = Storage.storage()
             let storageRef = storage.reference()
-            uploadImage(event,storageRef)
+            uploadImage(events[index],storageRef)
+            print("saved \(events[index].name)")
+            self.ref.child("events_count/").setValue(["\(currentUser.uid)":index])
+            print("saving index: \(index) with event \(events[index].name)")
         }
     }
-    func uploadImage(_ thisEvent:Event,_ thisRef:StorageReference) {
-        let data = UIImageJPEGRepresentation(thisEvent.photo!, 1)
-        let imageRef = thisRef.child("\(currentUser.uid)_\(thisEvent.name)_image.png")
-        _ = imageRef.putData(data!, metadata:nil,completion:{(metadata,error)
-            in guard metadata != nil else {
-                print(error!)
-                return
+    */
+    
+    //MARK: Completion handlers
+    func grabEvent(completion: @escaping ([Event]?) -> Void) {
+        
+        let ref = Database.database().reference()
+        var eventArray = [Event]()
+        
+        ref.child("users").child(currentUser.uid).observe(.value, with: { (snapshot) in
+            let enumerator = snapshot.children
+            while let data = enumerator.nextObject() as? DataSnapshot {
+                guard
+                    let theEvent = data.value as? Dictionary<String,String>,
+                    let eventName = theEvent["name"],
+                    let eventDate = theEvent["date"]
+                    else {
+                        print("Error! - Incomplete Data")
+                        completion(nil)
+                        return
+                }
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "h:mm a MMM d, yyyy " //date format
+                let defaultPhoto = UIImage(named: "defaultPhoto")
+                guard let temp = Event(name: "tempName", photo: defaultPhoto, date:Date()) else {
+                    fatalError("Unable to instantiate temporary event")
+                }
+                temp.name = eventName
+                temp.date = dateFormatter.date(from: eventDate)!
+                
+                eventArray.append(temp)
             }
-            //let downloadURL = metadata.path
-            //print(downloadURL!)
-            
+            completion(eventArray)
         })
+    }
+    
+    func timeGrabPhotos() {
+        print("timegrabphoto called")
+        grabPhoto(self.events[self.events.count-1]) { (photo) in
+            print("getphoto finished with event \(self.events[self.events.count-1].name)")
+            if let photo = photo {
+                for index in 0..<self.events.count {
+                    print("setting even photo for event \(self.events[index].name)")
+                    self.events[index].photo = photo
+                }
+                self.tableView.reloadData()
+            }
+        }
+        self.tableView.reloadData()
+    }
+    func grabPhoto(_ temp:Event, completionImage: @escaping (UIImage?) -> Void) {
+        
+        
+        let secondline = DispatchGroup()
+        secondline.enter()
+        
+        print("getphoto called")
+        let storageRef = Storage.storage().reference()
+        let defaultPhoto = UIImage(named: "defaultPhoto")
+        var photoImage:UIImage = defaultPhoto!
+        let reference = storageRef.child("\(self.currentUser.uid)_\(temp.name)_image.png")
+        reference.getData(maxSize: 10000000 * 1024 * 1024) { (data, error) -> Void in
+            if (error != nil) {
+                print(error!)
+            } else {
+                print("image grabbed")
+                photoImage = UIImage(data: data!)!
+                secondline.leave()
+            }
+        }
+        secondline.notify(queue: .main) {
+            print("image passed back and view reloaded")
+            completionImage(photoImage)
+            self.tableView.reloadData()
+        }
         
     }
+    
 
 }
