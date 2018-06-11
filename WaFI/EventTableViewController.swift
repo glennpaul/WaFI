@@ -211,7 +211,7 @@ class EventTableViewController: UITableViewController {
     }
     func uploadImage(_ thisEvent:Event,_ thisRef:StorageReference) {
         let data = UIImageJPEGRepresentation(thisEvent.photo!, 1)
-        let imageRef = thisRef.child("\(currentUser.uid)_\(thisEvent.name)_image.png")
+        let imageRef = thisRef.child("\(currentUser.uid)_\(thisEvent.UID)_image.png")
         _ = imageRef.putData(data!, metadata:nil,completion:{(metadata,error)
             in guard let metadata = metadata else {
                 print(error!)
@@ -273,7 +273,7 @@ class EventTableViewController: UITableViewController {
 		//iterate through events and grab thier images from storage
         for i in 0..<temp.count {
 			//grab image name from corresponding event
-            let reference = storageRef.child("\(self.currentUser.uid)_\(temp[i].name)_image.png")
+            let reference = storageRef.child("\(self.currentUser.uid)_\(temp[i].UID)_image.png")
             reference.getData(maxSize: 10000000 * 1024 * 1024) { (data, error) -> Void in
                 if (error != nil) {
                     print(error!)
