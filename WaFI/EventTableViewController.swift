@@ -26,16 +26,10 @@ class EventTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(events.count)
         // show edit button
         self.navigationItem.rightBarButtonItem = self.editButtonItem
-        // Load any saved events if available or load example events
-        print(currentUser.uid)
-    
-        //let count = self.events.count
-        //self.events.removeAll()
-        //self.tableView.deleteRows(at: (0..<count).map({ (i) in IndexPath(row: i, section: 0)}), with: .automatic)
         
+        // Load any saved events if available or load example events
         loadFromDB()
         
     }
@@ -58,7 +52,6 @@ class EventTableViewController: UITableViewController {
             //make sure to update if editing event, or add new if new event
             if let selectedIndexPath = tableView.indexPathForSelectedRow {
                 //update event and table
-                print(self.events.count)
                 events[selectedIndexPath.row] = event
                 tableView.reloadRows(at: [selectedIndexPath], with: .none)
             } else {
@@ -68,8 +61,6 @@ class EventTableViewController: UITableViewController {
                 events.append(event)
                 tableView.insertRows(at: [newIndexPath], with: .automatic)
             }
-            print(events.count)
-            //save all showed events to db
             saveEventsToDatabase()
         }
     }
@@ -104,7 +95,6 @@ class EventTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Table view cells are reused and should be dequeued using a cell identifier.
         let cellIdentifier = "EventTableViewCell"
-        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? EventTableViewCell  else {
             fatalError("The dequeued cell is not an instance of MealTableViewCell.")
         }
@@ -144,9 +134,7 @@ class EventTableViewController: UITableViewController {
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         super.prepare(for: segue, sender: sender)
-        
         switch(segue.identifier ?? "") {
         case "addEvent":
             os_log("Adding a new meal.", log: OSLog.default, type: .debug)
@@ -176,7 +164,6 @@ class EventTableViewController: UITableViewController {
             dateFormatter.dateFormat = "MMM d, yyyy" //date format
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "h:mm a" //time format
-            
             let thisEvent = [
                 "name":events[index].name,
                 "date": timeFormatter.string(from: (events[index].date))  + " " + dateFormatter.string(from: (events[index].date))
@@ -187,11 +174,8 @@ class EventTableViewController: UITableViewController {
             let storage = Storage.storage()
             let storageRef = storage.reference()
             uploadImage(events[index],storageRef)
-            //print("saved \(events[index].name)")
             self.ref.child("events_count/").setValue(["\(currentUser.uid)":index])
-            print("saving index: \(index) with event \(events[index].name)")
         }
-        print("completed save to firebase")
     }
     func uploadImage(_ thisEvent:Event,_ thisRef:StorageReference) {
         let data = UIImageJPEGRepresentation(thisEvent.photo!, 1)
@@ -203,13 +187,10 @@ class EventTableViewController: UITableViewController {
             }
             let downloadURL = metadata.path
             print(downloadURL!)
-            
         })
-        
     }
     //MARK: Completion handlers
     func grabEvent(completion: @escaping ([Event]?) -> Void) {
-        
         let ref = Database.database().reference()
         var eventArray = [Event]()
         ref.child("users").child(currentUser.uid).observeSingleEvent(of: .value, with: { (snapshot) in
@@ -225,29 +206,23 @@ class EventTableViewController: UITableViewController {
                         completion(nil)
                         return
                 }
-                print("\(eventName)")
                 let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "h:mm a MMM d, yyyy " //date format
+                dateFormatter.dateFormat = "h:mm a MMM d, yyyy "
                 let defaultPhoto = UIImage(named: "defaultPhoto")
                 guard let temp = Event(name: "tempName", photo: defaultPhoto, date:Date()) else {
                     fatalError("Unable to instantiate temporary event")
                 }
                 temp.name = eventName
                 temp.date = dateFormatter.date(from: eventDate)!
-                print("size of evntArray3: \(eventArray.count)")
                 eventArray.append(temp)
             }
-            print("what loadDB is given: \(eventArray.count)")
             completion(eventArray)
         })
     }
     func updateTableWithPhotos() {
-        print("timegrabphoto called")
         grabPhoto(self.events) { (photo) in
-            print("getphoto finished")
             if let photo = photo {
                 for index in 0..<self.events.count {
-                    //print("setting even photo for event \(self.events[index].name)")
                     self.events[index].photo = photo[index]
                     self.tableView.reloadData()
                 }
@@ -269,14 +244,12 @@ class EventTableViewController: UITableViewController {
                 if (error != nil) {
                     print(error!)
                 } else {
-                    //print("image grabbed")
                     photoImage.append(UIImage(data: data!)!)
                     secondline.leave()
                 }
             }
         }
         secondline.notify(queue: .main) {
-            //print("image passed back")
             completionImage(photoImage)
         }
     }
@@ -287,34 +260,19 @@ class EventTableViewController: UITableViewController {
             self.events.removeAll()
             self.grabEvent { (temp) in
                 if let temp = temp {
-                    print("\(temp.count) as size of temp")
                     self.events = temp
                     self.tableView.beginUpdates()
-                    for x in 0..<temp.count {
-                        print(temp[x].name)
-                    }
-                    if self.tableView.visibleCells.isEmpty {
-                        for index in 0..<temp.count {
-                            print("insertrows")
-                            self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-                        }
-                    } else {
-                        for index in 0..<temp.count {
-                            print("insertrows")
-                            self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
-                        }
+                    for index in 0..<temp.count {
+                        self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
                     }
                     self.tableView.endUpdates()
                     waitline.leave()
                 }
             }
         }
-        print(events.count)
         waitline.notify(queue: .main) {
             self.updateTableWithPhotos()
-            print(self.events.count)
         }
-        print(events.count)
     }
     
 
