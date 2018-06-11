@@ -26,30 +26,17 @@ class EventTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print(events.count)
         // show edit button
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         // Load any saved events if available or load example events
         print(currentUser.uid)
+    
+        //let count = self.events.count
+        //self.events.removeAll()
+        //self.tableView.deleteRows(at: (0..<count).map({ (i) in IndexPath(row: i, section: 0)}), with: .automatic)
         
-        
-        let waitline = DispatchGroup()
-        waitline.enter()
-        DispatchQueue.main.async {
-            self.grabEvent { (temp) in
-                if let temp = temp {
-                    self.events = temp
-                    self.tableView.beginUpdates()
-                    for index in 0..<self.events.count {
-                        self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-                    }
-                    self.tableView.endUpdates()
-                    waitline.leave()
-                }
-            }
-        }
-        waitline.notify(queue: .main) {
-            self.updateTableWithPhotos()
-        }
+        loadFromDB()
         
     }
     override func didReceiveMemoryWarning() {
@@ -71,6 +58,7 @@ class EventTableViewController: UITableViewController {
             //make sure to update if editing event, or add new if new event
             if let selectedIndexPath = tableView.indexPathForSelectedRow {
                 //update event and table
+                print(self.events.count)
                 events[selectedIndexPath.row] = event
                 tableView.reloadRows(at: [selectedIndexPath], with: .none)
             } else {
@@ -80,10 +68,12 @@ class EventTableViewController: UITableViewController {
                 events.append(event)
                 tableView.insertRows(at: [newIndexPath], with: .automatic)
             }
+            print(events.count)
             //save all showed events to db
             saveEventsToDatabase()
         }
     }
+    
     @IBAction func logOut(_ sender: UIBarButtonItem) {
         if Auth.auth().currentUser != nil {
             do {
@@ -181,7 +171,7 @@ class EventTableViewController: UITableViewController {
    
     //MARK: Database and Storage Functions
     private func saveEventsToDatabase() {
-        for (index,event) in events.enumerated() {
+        for (index,_) in events.enumerated() {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMM d, yyyy" //date format
             let timeFormatter = DateFormatter()
@@ -199,7 +189,7 @@ class EventTableViewController: UITableViewController {
             uploadImage(events[index],storageRef)
             //print("saved \(events[index].name)")
             self.ref.child("events_count/").setValue(["\(currentUser.uid)":index])
-            //print("saving index: \(index) with event \(events[index].name)")
+            print("saving index: \(index) with event \(events[index].name)")
         }
         print("completed save to firebase")
     }
@@ -222,8 +212,8 @@ class EventTableViewController: UITableViewController {
         
         let ref = Database.database().reference()
         var eventArray = [Event]()
-        
-        ref.child("users").child(currentUser.uid).observe(.value, with: { (snapshot) in
+        ref.child("users").child(currentUser.uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            eventArray.removeAll()
             let enumerator = snapshot.children
             while let data = enumerator.nextObject() as? DataSnapshot {
                 guard
@@ -235,6 +225,7 @@ class EventTableViewController: UITableViewController {
                         completion(nil)
                         return
                 }
+                print("\(eventName)")
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "h:mm a MMM d, yyyy " //date format
                 let defaultPhoto = UIImage(named: "defaultPhoto")
@@ -243,12 +234,13 @@ class EventTableViewController: UITableViewController {
                 }
                 temp.name = eventName
                 temp.date = dateFormatter.date(from: eventDate)!
+                print("size of evntArray3: \(eventArray.count)")
                 eventArray.append(temp)
             }
+            print("what loadDB is given: \(eventArray.count)")
             completion(eventArray)
         })
     }
-    
     func updateTableWithPhotos() {
         print("timegrabphoto called")
         grabPhoto(self.events) { (photo) in
@@ -263,13 +255,11 @@ class EventTableViewController: UITableViewController {
         }
     }
     func grabPhoto(_ temp:[Event], completionImage: @escaping ([UIImage]?) -> Void) {
-        
         //setup GCD
         let secondline = DispatchGroup()
         for _ in 0..<temp.count {
             secondline.enter()
         }
-        
         //print("getphoto called")
         let storageRef = Storage.storage().reference()
         var photoImage = [UIImage]()
@@ -289,7 +279,42 @@ class EventTableViewController: UITableViewController {
             //print("image passed back")
             completionImage(photoImage)
         }
-        
+    }
+    private func loadFromDB() {
+        let waitline = DispatchGroup()
+        waitline.enter()
+        DispatchQueue.main.async {
+            self.events.removeAll()
+            self.grabEvent { (temp) in
+                if let temp = temp {
+                    print("\(temp.count) as size of temp")
+                    self.events = temp
+                    self.tableView.beginUpdates()
+                    for x in 0..<temp.count {
+                        print(temp[x].name)
+                    }
+                    if self.tableView.visibleCells.isEmpty {
+                        for index in 0..<temp.count {
+                            print("insertrows")
+                            self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                        }
+                    } else {
+                        for index in 0..<temp.count {
+                            print("insertrows")
+                            self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+                        }
+                    }
+                    self.tableView.endUpdates()
+                    waitline.leave()
+                }
+            }
+        }
+        print(events.count)
+        waitline.notify(queue: .main) {
+            self.updateTableWithPhotos()
+            print(self.events.count)
+        }
+        print(events.count)
     }
     
 
