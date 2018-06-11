@@ -88,6 +88,13 @@ class EventTableViewController: UITableViewController {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }
     }
+	override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+		let movedObject = self.events[sourceIndexPath.row]
+		events.remove(at: sourceIndexPath.row)
+		events.insert(movedObject, at: destinationIndexPath.row)
+		NSLog("%@", "\(sourceIndexPath.row) => \(destinationIndexPath.row) \(events)")
+		// To check for correctness enable: self.tableView.reloadData()
+	}
     
     
     //----------------------------------------------------------------
