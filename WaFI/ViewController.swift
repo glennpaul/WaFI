@@ -133,7 +133,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         print(segue.destination)
         if let navController = segue.destination as? UINavigationController {
             let PickerView = navController.topViewController as! PickerViewController
-            PickerView.event = Event(name:navigationItem.title!,photo:photoImage.image,date:Date())
+			PickerView.event = Event(name:navigationItem.title!,photo:photoImage.image,date:Date(),UID:randomAlphaNumericString(length:24))
             PickerView.delegate = self
         }
     }
@@ -151,7 +151,20 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         imagePickerController.delegate = self
         present(imagePickerController, animated: true, completion: nil)
     }
-    
+	
+	//function to generate random string
+	func randomAlphaNumericString(length: Int) -> String {
+		let allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+		let allowedCharsCount = UInt32(allowedChars.count)
+		var randomString = ""
+		for _ in 0..<length {
+			let randomNum = Int(arc4random_uniform(allowedCharsCount))
+			let randomIndex = allowedChars.index(allowedChars.startIndex, offsetBy: randomNum)
+			let newCharacter = allowedChars[randomIndex]
+			randomString += String(newCharacter)
+		}
+		return randomString
+	}
     
     //----------------------------------------------------------------
     

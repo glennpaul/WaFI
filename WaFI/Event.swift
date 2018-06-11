@@ -9,7 +9,7 @@
 import UIKit
 import os.log
 
-class Event: NSObject, NSCoding {
+class Event {
     
     
     //MARK: Archiving Paths
@@ -21,6 +21,7 @@ class Event: NSObject, NSCoding {
     var name: String
     var photo: UIImage?
     var date: Date
+	var UID: String
     
     struct PropertyKey {
         static let name = "name"
@@ -28,7 +29,7 @@ class Event: NSObject, NSCoding {
         static let date = "date"
     }
     
-    init?(name: String, photo: UIImage?, date: Date) {
+	init?(name: String, photo: UIImage?, date: Date, UID:String) {
         // Initialization should fail if there is no name or if the rating is negative.
         if name.isEmpty  {
             return nil
@@ -37,25 +38,7 @@ class Event: NSObject, NSCoding {
         self.name = name
         self.photo = photo
         self.date = date
-    }
-    
-    //MARK: NSCoding
-    func encode(with aCoder: NSCoder) {
-        aCoder.encode(name, forKey: PropertyKey.name)
-        aCoder.encode(photo, forKey: PropertyKey.photo)
-        aCoder.encode(date, forKey: PropertyKey.date)
-    }
-    required convenience init?(coder aDecoder: NSCoder) {
-        // The name is required. If we cannot decode a name string, the initializer should fail.
-        guard let name = aDecoder.decodeObject(forKey: PropertyKey.name) as? String else {
-            os_log("Unable to decode the name for a Event object.", log: OSLog.default, type: .debug)
-            return nil
-        }
-        // Because photo is an optional property of Meal, just use conditional cast.
-        let photo = aDecoder.decodeObject(forKey: PropertyKey.photo) as? UIImage
-        let date = aDecoder.decodeObject(forKey: PropertyKey.date) as? Date
-        // Must call designated initializer.
-        self.init(name: name, photo: photo, date: date!)
+		self.UID = UID
     }
     
 }
