@@ -19,6 +19,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
     @IBOutlet weak var dateTimeLabel: UILabel!
 	@IBOutlet weak var timeDiffLabel: UILabel!
 	var event: Event?
+	var countDown: Timer?
+	var seconds = 0.0
     
 
     override func viewDidLoad() {
@@ -40,10 +42,12 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
             dateTimeLabel.text = newDate
             updateSaveButtonState()
 			if dateTimeLabel.text != "Event must have Date/Time" {
+				seconds = (event.date.timeIntervalSince(Date()))
 				timeDiffLabel.text = stringFromTimeInterval(interval: (event.date.timeIntervalSince(Date())))
 			} else {
 				timeDiffLabel.text = ""
 			}
+			startTimer()
         }
     }
     override func didReceiveMemoryWarning() {
@@ -53,6 +57,26 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
     
     
     //----------------------------------------------------------------
+	
+	//MARK: Timer Functions
+	
+	func timeConverter(_ time:TimeInterval) -> String {
+		let hours = Int(time) / 3600
+		let minutes = Int(time) / 60 % 60
+		let seconds = Int(time) % 60
+		return String(format:"\(hours):\(minutes):\(seconds)")
+	}
+	@objc func tickTimer(){
+		seconds -= 1
+		timeDiffLabel.text = timeConverter(TimeInterval(seconds))
+	}
+	func startTimer() {
+		countDown = Timer.scheduledTimer(timeInterval: 0.95, target: self, selector: (#selector(ViewController.tickTimer)), userInfo: nil, repeats: true)
+	}
+	
+	
+	//----------------------------------------------------------------
+	
     
     
     //MARK: PickerviewControllerDelegate
@@ -68,6 +92,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         
         dateTimeLabel.text = newDate
 		if dateTimeLabel.text != "Event must have Date/Time" {
+			seconds = (event?.date.timeIntervalSince(Date()))!
 			timeDiffLabel.text = stringFromTimeInterval(interval: (event?.date.timeIntervalSince(Date()))!)
 		} else {
 			timeDiffLabel.text = ""

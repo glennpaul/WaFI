@@ -107,8 +107,8 @@
 			children = (
 				522E492820C4C74000AE1093 /* AppDelegate.swift */,
 				522E494C20C56B7B00AE1093 /* Event.swift */,
-				522E495020C5778000AE1093 /* EventTableViewController.swift */,
 				522E494E20C56CDD00AE1093 /* EventTableViewCell.swift */,
+				522E495020C5778000AE1093 /* EventTableViewController.swift */,
 				522E492A20C4C74000AE1093 /* ViewController.swift */,
 				522E495220C58DE900AE1093 /* PickerViewController.swift */,
 				5266420220CA019A00AE2DD9 /* SignInViewController.swift */,

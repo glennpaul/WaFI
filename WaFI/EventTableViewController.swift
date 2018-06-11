@@ -60,12 +60,15 @@ class EventTableViewController: UITableViewController {
         // Fetches the appropriate meal for the data source layout.
         let event = events[indexPath.row]
         //create date formatter for date conversion into string
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "yyyy-MM-dd"
+		let timeformatter = DateFormatter()
+		timeformatter.dateFormat = "HH:mm:ss"
         //set values in cells
         cell.eventName.text = event.name
         cell.eventImage.image = event.photo
-        cell.eventDetail.text = formatter.string(from: event.date)
+        cell.eventDetail.text = dateformatter.string(from: event.date) + "\n" + timeformatter.string(from: event.date)
+		print(dateformatter.string(from: event.date) + "\n" + timeformatter.string(from: event.date))
         return cell
     }
     // Override to support conditional editing of the table view.
