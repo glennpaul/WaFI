@@ -17,7 +17,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
     @IBOutlet weak var photoImage: UIImageView!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var dateTimeLabel: UILabel!
-    var event: Event?
+	@IBOutlet weak var timeDiffLabel: UILabel!
+	var event: Event?
     
 
     override func viewDidLoad() {
@@ -38,6 +39,11 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
             
             dateTimeLabel.text = newDate
             updateSaveButtonState()
+			if dateTimeLabel.text != "Event must have Date/Time" {
+				timeDiffLabel.text = stringFromTimeInterval(interval: (event.date.timeIntervalSince(Date())))
+			} else {
+				timeDiffLabel.text = ""
+			}
         }
     }
     override func didReceiveMemoryWarning() {
@@ -61,9 +67,20 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         let newDate = timeFormatter.string(from: (event?.date)!)  + " on " + dateFormatter.string(from: (event?.date)!) //pass Date here
         
         dateTimeLabel.text = newDate
+		if dateTimeLabel.text != "Event must have Date/Time" {
+			timeDiffLabel.text = stringFromTimeInterval(interval: (event?.date.timeIntervalSince(Date()))!)
+		} else {
+			timeDiffLabel.text = ""
+		}
         updateSaveButtonState()
     }
-    
+	func stringFromTimeInterval(interval: TimeInterval) -> String {
+		let interval = Int(interval)
+		let seconds = interval % 60
+		let minutes = (interval / 60) % 60
+		let hours = (interval / 3600)
+		return String(format: "\(hours):\(minutes):\(seconds)")
+	}
     
     
     //----------------------------------------------------------------

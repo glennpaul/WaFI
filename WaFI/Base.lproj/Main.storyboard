@@ -217,7 +217,7 @@
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="PWa-ob-0TK">
-                                <rect key="frame" x="8" y="493" width="359" height="30"/>
+                                <rect key="frame" x="8" y="472.5" width="359" height="50.5"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="100" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Isl-gc-EcR">
                                         <rect key="frame" x="8" y="0.0" width="343" height="30"/>
@@ -226,6 +226,12 @@
                                             <segue destination="PmM-7r-HjV" kind="presentation" id="XhC-n8-d86"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H1m-am-Yzt">
+                                        <rect key="frame" x="158.5" y="30" width="42" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="Isl-gc-EcR" firstAttribute="leading" secondItem="PWa-ob-0TK" secondAttribute="leading" constant="8" id="SQi-A8-iDu"/>
@@ -265,6 +271,7 @@
                         <outlet property="editText" destination="UwX-fF-uQ5" id="FLN-6j-PaV"/>
                         <outlet property="photoImage" destination="NZb-dl-0VB" id="uPB-QS-eVS"/>
                         <outlet property="saveButton" destination="sCj-qx-KBB" id="xxw-SV-vle"/>
+                        <outlet property="timeDiffLabel" destination="H1m-am-Yzt" id="AtU-qH-4Rx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -275,7 +282,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2118" y="63"/>
+            <point key="canvasLocation" x="2117.5999999999999" y="62.518740629685162"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="lOF-oc-584">
