@@ -9,7 +9,6 @@
 import UIKit
 import os.log
 
-
 import Foundation
 import Firebase
 import FirebaseAuth
@@ -50,14 +49,12 @@ class EventTableViewController: UITableViewController {
         //make sure coming from viewcontroller scene
         if let sourceViewController = sender.source as? ViewController, let event = sourceViewController.event {
             //make sure to update if editing event, or add new if new event
-            if let selectedIndexPath = tableView.indexPathForSelectedRow {
-                //update event and table
+            if let selectedIndexPath = tableView.indexPathForSelectedRow { //if editing a selected row update event and table
                 events[selectedIndexPath.row] = event
                 tableView.reloadRows(at: [selectedIndexPath], with: .none)
             } else {
                 // Add a new meal.
-                let newIndexPath = IndexPath(row: events.count, section: 0)
-                //append to event list and insert to table
+                let newIndexPath = IndexPath(row: events.count, section: 0) // if adding new event, append to table
                 events.append(event)
                 tableView.insertRows(at: [newIndexPath], with: .automatic)
             }
@@ -83,7 +80,6 @@ class EventTableViewController: UITableViewController {
     
     
     // MARK: Table view data source
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
@@ -185,8 +181,7 @@ class EventTableViewController: UITableViewController {
                 print(error!)
                 return
             }
-            let downloadURL = metadata.path
-            print(downloadURL!)
+			_ = metadata.path
         })
     }
     //MARK: Completion handlers
@@ -227,30 +222,30 @@ class EventTableViewController: UITableViewController {
                     self.tableView.reloadData()
                 }
             }
+			//self.tableView.reloadData()
         }
     }
-    func grabPhoto(_ temp:[Event], completionImage: @escaping ([UIImage]?) -> Void) {
+    func grabPhoto(_ temp:[Event], completionImage: @escaping ([UIImage?]?) -> Void) {
+		let storageRef = Storage.storage().reference()
+		var thePhotos = [UIImage?](repeating: nil, count: temp.count)
         //setup GCD
         let secondline = DispatchGroup()
         for _ in 0..<temp.count {
             secondline.enter()
         }
-        //print("getphoto called")
-        let storageRef = Storage.storage().reference()
-        var photoImage = [UIImage]()
         for i in 0..<temp.count {
             let reference = storageRef.child("\(self.currentUser.uid)_\(temp[i].name)_image.png")
             reference.getData(maxSize: 10000000 * 1024 * 1024) { (data, error) -> Void in
                 if (error != nil) {
                     print(error!)
                 } else {
-                    photoImage.append(UIImage(data: data!)!)
-                    secondline.leave()
+					thePhotos[i] = UIImage(data: data!)!
+					secondline.leave()
                 }
             }
         }
         secondline.notify(queue: .main) {
-            completionImage(photoImage)
+            completionImage(thePhotos)
         }
     }
     private func loadFromDB() {
