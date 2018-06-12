@@ -65,13 +65,13 @@ class EventTableViewController: UITableViewController {
 	}
 	func stringFromTimeInterval(interval: TimeInterval) -> String {
 		
-		let formatter = NumberFormatter()
-		formatter.minimumIntegerDigits = 2
+		let countdownFormatter = NumberFormatter()
+		countdownFormatter.minimumIntegerDigits = 2
 		
 		let hours = Int(interval) / 3600
 		let minutes = Int(interval) / 60 % 60
 		let seconds = Int(interval) % 60
-		return formatter.string(from: NSNumber.init(value: hours))! + ":" + formatter.string(from: NSNumber.init(value: minutes))! + ":" + formatter.string(from: NSNumber.init(value: seconds))!
+		return countdownFormatter.string(from: NSNumber.init(value: hours))! + ":" + countdownFormatter.string(from: NSNumber.init(value: minutes))! + ":" + countdownFormatter.string(from: NSNumber.init(value: seconds))!
 	}
 	
 	//----------------------------------------------------------------

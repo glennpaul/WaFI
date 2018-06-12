@@ -30,23 +30,25 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         updateSaveButtonState()
         
         if let event = event {
+			
+			let dateFormatter = DateFormatter()
+			dateFormatter.dateFormat = "MMM d, yyyy" //date format
+			let timeFormatter = DateFormatter()
+			timeFormatter.dateFormat = "h:mm a" //time format
+			let newDate = timeFormatter.string(from:event.date)  + " on " + dateFormatter.string(from: event.date)
+			
             navigationItem.title = event.name
             photoImage.image = event.photo
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MMM d, yyyy" //date format
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "h:mm a" //time format
-            let newDate = timeFormatter.string(from:event.date)  + " on " + dateFormatter.string(from: event.date) //pass Date here
-            
             dateTimeLabel.text = newDate
-            updateSaveButtonState()
+			
 			if dateTimeLabel.text != "Event must have Date/Time" {
 				seconds = (event.date.timeIntervalSince(Date()))
 				timeDiffLabel.text = stringFromTimeInterval(interval: (event.date.timeIntervalSince(Date())))
 			} else {
 				timeDiffLabel.text = ""
 			}
+			
+			updateSaveButtonState()
 			startTimer()
         }
     }
@@ -60,26 +62,24 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
 	
 	//MARK: Timer Functions
 	
-	func timeConverter(_ time:TimeInterval) -> String {
-		let hours = Int(time) / 3600
-		let minutes = Int(time) / 60 % 60
-		let seconds = Int(time) % 60
-		return String(format:"\(hours):\(minutes):\(seconds)")
-	}
 	@objc func tickTimer(){
 		seconds -= 1
-		timeDiffLabel.text = timeConverter(TimeInterval(seconds))
+		timeDiffLabel.text = stringFromTimeInterval(interval: TimeInterval(seconds))
 	}
 	func startTimer() {
 		countDown = Timer.scheduledTimer(timeInterval: 0.95, target: self, selector: (#selector(ViewController.tickTimer)), userInfo: nil, repeats: true)
 	}
 	func stringFromTimeInterval(interval: TimeInterval) -> String {
-		let interval = Int(interval)
-		let seconds = interval % 60
-		let minutes = (interval / 60) % 60
-		let hours = (interval / 3600)
-		return String(format: "\(hours):\(minutes):\(seconds)")
+		
+		let countdownFormatter = NumberFormatter()
+		countdownFormatter.minimumIntegerDigits = 2
+		
+		let hours = Int(interval) / 3600
+		let minutes = Int(interval) / 60 % 60
+		let seconds = Int(interval) % 60
+		return countdownFormatter.string(from: NSNumber.init(value: hours))! + ":" + countdownFormatter.string(from: NSNumber.init(value: minutes))! + ":" + countdownFormatter.string(from: NSNumber.init(value: seconds))!
 	}
+	
 	
 	//----------------------------------------------------------------
 	
@@ -103,6 +103,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
 		} else {
 			timeDiffLabel.text = ""
 		}
+		startTimer()
         updateSaveButtonState()
     }
     
