@@ -21,6 +21,8 @@ class EventTableViewController: UITableViewController {
     var events = [Event]()
     var currentUser:User = Auth.auth().currentUser!
     let ref: DatabaseReference! = Database.database().reference()
+	var seconds = 0.0
+	
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +32,7 @@ class EventTableViewController: UITableViewController {
         
         // Load any saved events if available or load example events
         loadFromDB()
+		//startTimer()
         
     }
     override func didReceiveMemoryWarning() {
@@ -39,7 +42,40 @@ class EventTableViewController: UITableViewController {
     
 
     //----------------------------------------------------------------
-    
+	
+	//MARK: Timer functions
+	
+	func timeConverter(_ time:TimeInterval) -> String {
+		let hours = Int(time) / 3600
+		let minutes = Int(time) / 60 % 60
+		let seconds = Int(time) % 60
+		return String(format:"\(hours):\(minutes):\(seconds)")
+	}
+	@objc func tickTimer(){
+		let dateformatter = DateFormatter()
+		dateformatter.dateFormat = "yyyy-MM-dd"
+		
+		for (index,theEvent) in events.enumerated() {
+			let cell = self.tableView.cellForRow(at: IndexPath(row:index,section:0)) as! EventTableViewCell
+			cell.eventDetail.text = dateformatter.string(from: theEvent.date) + "\n" + stringFromTimeInterval(interval: theEvent.date.timeIntervalSince(Date()))
+		}
+	}
+	func startTimer() {
+		_ = Timer.scheduledTimer(timeInterval: 0.97, target: self, selector: (#selector(ViewController.tickTimer)), userInfo: nil, repeats: true)
+	}
+	func stringFromTimeInterval(interval: TimeInterval) -> String {
+		
+		let formatter = NumberFormatter()
+		formatter.minimumIntegerDigits = 2
+		
+		let hours = Int(interval) / 3600
+		let minutes = Int(interval) / 60 % 60
+		let seconds = Int(interval) % 60
+		return formatter.string(from: NSNumber.init(value: hours))! + ":" + formatter.string(from: NSNumber.init(value: minutes))! + ":" + formatter.string(from: NSNumber.init(value: seconds))!
+	}
+	
+	//----------------------------------------------------------------
+	
     
     
     // MARK: Table view data source
@@ -67,8 +103,8 @@ class EventTableViewController: UITableViewController {
         //set values in cells
         cell.eventName.text = event.name
         cell.eventImage.image = event.photo
-        cell.eventDetail.text = dateformatter.string(from: event.date) + "\n" + timeformatter.string(from: event.date)
-		print(dateformatter.string(from: event.date) + "\n" + timeformatter.string(from: event.date))
+		cell.eventDetail.text = dateformatter.string(from: event.date) + "\n" + timeformatter.string(from: event.date)
+		//print(dateformatter.string(from: event.date) + "\n" + timeformatter.string(from: event.date))
         return cell
     }
     // Override to support conditional editing of the table view.
@@ -84,7 +120,6 @@ class EventTableViewController: UITableViewController {
             events.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
 			saveEventsToDatabase()
-			print("removing from firebase node \(events.count+1)")
 			self.ref.child("users").child(currentUser.uid).child("\(events.count+1)").removeValue()
         } else if editingStyle == .insert {
 			saveEventsToDatabase()
@@ -187,6 +222,7 @@ class EventTableViewController: UITableViewController {
 						//insert event rows into table
 						self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
 					}
+					self.startTimer()
 					self.tableView.endUpdates()
 					waitline.leave()
 				}

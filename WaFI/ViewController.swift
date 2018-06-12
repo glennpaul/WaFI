@@ -73,7 +73,13 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
 	func startTimer() {
 		countDown = Timer.scheduledTimer(timeInterval: 0.95, target: self, selector: (#selector(ViewController.tickTimer)), userInfo: nil, repeats: true)
 	}
-	
+	func stringFromTimeInterval(interval: TimeInterval) -> String {
+		let interval = Int(interval)
+		let seconds = interval % 60
+		let minutes = (interval / 60) % 60
+		let hours = (interval / 3600)
+		return String(format: "\(hours):\(minutes):\(seconds)")
+	}
 	
 	//----------------------------------------------------------------
 	
@@ -99,13 +105,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
 		}
         updateSaveButtonState()
     }
-	func stringFromTimeInterval(interval: TimeInterval) -> String {
-		let interval = Int(interval)
-		let seconds = interval % 60
-		let minutes = (interval / 60) % 60
-		let hours = (interval / 3600)
-		return String(format: "\(hours):\(minutes):\(seconds)")
-	}
     
     
     //----------------------------------------------------------------
