@@ -22,18 +22,13 @@ class EventTableViewController: UITableViewController {
     var currentUser:User = Auth.auth().currentUser!
     let ref: DatabaseReference! = Database.database().reference()
 	var seconds = 0.0
-	
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // show edit button
         self.navigationItem.rightBarButtonItem = self.editButtonItem
-        
         // Load any saved events if available or load example events
         loadFromDB()
-		//startTimer()
-        
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -45,12 +40,6 @@ class EventTableViewController: UITableViewController {
 	
 	//MARK: Timer functions
 	
-	func timeConverter(_ time:TimeInterval) -> String {
-		let hours = Int(time) / 3600
-		let minutes = Int(time) / 60 % 60
-		let seconds = Int(time) % 60
-		return String(format:"\(hours):\(minutes):\(seconds)")
-	}
 	@objc func tickTimer(){
 		let dateformatter = DateFormatter()
 		dateformatter.dateFormat = "yyyy-MM-dd"
@@ -61,7 +50,7 @@ class EventTableViewController: UITableViewController {
 		}
 	}
 	func startTimer() {
-		_ = Timer.scheduledTimer(timeInterval: 0.97, target: self, selector: (#selector(ViewController.tickTimer)), userInfo: nil, repeats: true)
+		_ = Timer.scheduledTimer(timeInterval: 0.99, target: self, selector: (#selector(ViewController.tickTimer)), userInfo: nil, repeats: true)
 	}
 	func stringFromTimeInterval(interval: TimeInterval) -> String {
 		
@@ -104,7 +93,6 @@ class EventTableViewController: UITableViewController {
         cell.eventName.text = event.name
         cell.eventImage.image = event.photo
 		cell.eventDetail.text = dateformatter.string(from: event.date) + "\n" + timeformatter.string(from: event.date)
-		//print(dateformatter.string(from: event.date) + "\n" + timeformatter.string(from: event.date))
         return cell
     }
     // Override to support conditional editing of the table view.
@@ -116,7 +104,6 @@ class EventTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-			print(indexPath.row)
             events.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
 			saveEventsToDatabase()
@@ -236,7 +223,6 @@ class EventTableViewController: UITableViewController {
 	}
     private func saveEventsToDatabase() {
 		for (index,_) in events.enumerated() {
-			print(events[index].name)
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMM d, yyyy" //date format
             let timeFormatter = DateFormatter()
@@ -335,7 +321,5 @@ class EventTableViewController: UITableViewController {
             completionImage(thePhotos)
         }
     }
-
-    
 
 }
