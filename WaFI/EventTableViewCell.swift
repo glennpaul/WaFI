@@ -17,9 +17,7 @@ class EventTableViewCell: UITableViewCell {
 	
     override func awakeFromNib() {
         super.awakeFromNib()
-		self.showsReorderControl = true
-		self.shouldIndentWhileEditing = false
-		self.setEditing(true, animated: true)
+		self.indentationWidth = -15
         // Initialization code
     }
 	
