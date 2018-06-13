@@ -19,6 +19,7 @@
 		522E495120C5778000AE1093 /* EventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522E495020C5778000AE1093 /* EventTableViewController.swift */; };
 		522E495320C58DE900AE1093 /* PickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522E495220C58DE900AE1093 /* PickerViewController.swift */; };
 		522E495520C9E21100AE1093 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 522E495420C9E21100AE1093 /* GoogleService-Info.plist */; };
+		52559C1120D0779700DFB857 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52559C1020D0779700DFB857 /* TableViewController.swift */; };
 		5266420320CA019A00AE2DD9 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5266420220CA019A00AE2DD9 /* SignInViewController.swift */; };
 		5266420520CA144900AE2DD9 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5266420420CA144900AE2DD9 /* SignUpViewController.swift */; };
 		5266420720CA145C00AE2DD9 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5266420620CA145C00AE2DD9 /* ResetPasswordViewController.swift */; };
@@ -52,6 +53,7 @@
 		522E495020C5778000AE1093 /* EventTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTableViewController.swift; sourceTree = "<group>"; };
 		522E495220C58DE900AE1093 /* PickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewController.swift; sourceTree = "<group>"; };
 		522E495420C9E21100AE1093 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		52559C1020D0779700DFB857 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		5266420220CA019A00AE2DD9 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		5266420420CA144900AE2DD9 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		5266420620CA145C00AE2DD9 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				5266420220CA019A00AE2DD9 /* SignInViewController.swift */,
 				5266420420CA144900AE2DD9 /* SignUpViewController.swift */,
 				5266420620CA145C00AE2DD9 /* ResetPasswordViewController.swift */,
+				52559C1020D0779700DFB857 /* TableViewController.swift */,
 				522E492C20C4C74000AE1093 /* Main.storyboard */,
 				522E492F20C4C74100AE1093 /* Assets.xcassets */,
 				522E493120C4C74100AE1093 /* LaunchScreen.storyboard */,
@@ -323,6 +326,7 @@
 				5266420720CA145C00AE2DD9 /* ResetPasswordViewController.swift in Sources */,
 				5266420320CA019A00AE2DD9 /* SignInViewController.swift in Sources */,
 				522E495320C58DE900AE1093 /* PickerViewController.swift in Sources */,
+				52559C1120D0779700DFB857 /* TableViewController.swift in Sources */,
 				5266420520CA144900AE2DD9 /* SignUpViewController.swift in Sources */,
 				522E494D20C56B7B00AE1093 /* Event.swift in Sources */,
 				522E492B20C4C74000AE1093 /* ViewController.swift in Sources */,

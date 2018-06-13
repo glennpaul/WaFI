@@ -46,7 +46,7 @@ class EventTableViewController: UITableViewController {
 		
 		for (index,theEvent) in events.enumerated() {
 			let cell = self.tableView.cellForRow(at: IndexPath(row:index,section:0)) as! EventTableViewCell
-			cell.eventDetail.text = dateformatter.string(from: theEvent.date) + "\n" + stringFromTimeInterval(interval: theEvent.date.timeIntervalSince(Date()))
+			cell.eventDetail?.text = dateformatter.string(from: theEvent.date) + "\n" + stringFromTimeInterval(interval: theEvent.date.timeIntervalSince(Date()))
 		}
 	}
 	func startTimer() {
@@ -90,9 +90,9 @@ class EventTableViewController: UITableViewController {
 		let timeformatter = DateFormatter()
 		timeformatter.dateFormat = "HH:mm:ss"
         //set values in cells
-        cell.eventName.text = event.name
-        cell.eventImage.image = event.photo
-		cell.eventDetail.text = dateformatter.string(from: event.date) + "\n" + timeformatter.string(from: event.date)
+		cell.eventName?.text = event.name
+		cell.eventImage?.image = event.photo
+		cell.eventDetail?.text = dateformatter.string(from: event.date) + "\n" + timeformatter.string(from: event.date)
         return cell
     }
     // Override to support conditional editing of the table view.
