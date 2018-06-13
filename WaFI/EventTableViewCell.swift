@@ -14,6 +14,7 @@ class EventTableViewCell: UITableViewCell {
 	@IBOutlet weak var eventImage: UIImageView!
 	@IBOutlet weak var eventName: UILabel!
 	@IBOutlet weak var eventDetail: UILabel!
+	@IBOutlet weak var countdownLabel: UILabel!
 	
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -80,12 +80,12 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		//create date formatter for date conversion into string
 		let dateformatter = DateFormatter()
 		dateformatter.dateFormat = "yyyy-MM-dd"
-		let timeformatter = DateFormatter()
-		timeformatter.dateFormat = "HH:mm:ss"
+			//let timeformatter = DateFormatter()
+			//timeformatter.dateFormat = "HH:mm:ss"
 		//set values in cells
 		cell.eventName?.text = event.name
 		cell.eventImage?.image = event.photo
-		cell.eventDetail?.text = dateformatter.string(from: event.date) + "\n" + timeformatter.string(from: event.date)
+		cell.eventDetail?.text = dateformatter.string(from: event.date) //+ "\n" + timeformatter.string(from: event.date)
 		return cell
 	}
 	
@@ -150,7 +150,16 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		
 		for (index,theEvent) in events.enumerated() {
 			let cell = self.tableView.cellForRow(at: IndexPath(row:index,section:0)) as! EventTableViewCell
-			cell.eventDetail?.text = dateformatter.string(from: theEvent.date) + "\n" + stringFromTimeInterval(interval: theEvent.date.timeIntervalSince(Date()))
+			//cell.eventDetail?.text = dateformatter.string(from: theEvent.date) + "\n" + stringFromTimeInterval(interval: theEvent.date.timeIntervalSince(Date()))
+			let timeformatter = DateFormatter()
+			timeformatter.dateFormat = "HH:mm:ss"
+			var comp = DateComponents()
+			comp.day = 1
+			if theEvent.date < Calendar.current.date(byAdding: comp, to: Date())! && theEvent.date > Date() {
+				cell.countdownLabel.text = stringFromTimeInterval(interval: theEvent.date.timeIntervalSince(Date()))
+			} else if (theEvent.date < Calendar.current.date(byAdding: comp, to: Date())! && theEvent.date < Date()) {
+				cell.countdownLabel.text = "DONE"
+			}
 		}
 	}
 	func startTimer() {
