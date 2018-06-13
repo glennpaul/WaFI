@@ -97,11 +97,22 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	// Override to support editing the table view.
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
-			// Delete the row from the data source
-			events.remove(at: indexPath.row)
-			tableView.deleteRows(at: [indexPath], with: .fade)
-			saveEventsToDatabase()
-			self.ref.child("users").child(currentUser.uid).child("\(events.count+1)").removeValue()
+			
+			let imageStorage = Storage.storage().reference()
+			let reference = imageStorage.child("\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
+			reference.delete { error in
+				if let error = error {
+					print(error)
+				} else {
+					// Delete the row from the data source
+					self.events.remove(at: indexPath.row)
+					tableView.deleteRows(at: [indexPath], with: .fade)
+					self.saveEventsToDatabase()
+					self.ref.child("users").child(self.currentUser.uid).child("\(self.events.count+1)").removeValue()
+				}
+			}
+			
+			
 		} else if editingStyle == .insert {
 			saveEventsToDatabase()
 			// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
