@@ -18,7 +18,7 @@ import FirebaseStorage
 class TableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	
 	
-	@IBOutlet weak var theTableView: UITableView!
+	@IBOutlet weak var tableView: UITableView!
 	
 	var events = [Event]()
 	var currentUser:User = Auth.auth().currentUser!
@@ -29,14 +29,13 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		theTableView.delegate = self
-		theTableView.dataSource = self
-		
-		
-		self.navigationItem.rightBarButtonItem = self.editButtonItem
+		tableView.delegate = self
+		tableView.dataSource = self
 		// Load any saved events if available or load example events
 		loadFromDB()
-
+		
+		let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(toggleEditing)) // create a bat button
+		navigationItem.rightBarButtonItem = editButton // assign button
         // Do any additional setup after loading the view.
     }
 
@@ -47,17 +46,26 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
     
 
 	//MARK: Tableview
-	
-	
+	@objc private func toggleEditing() {
+		tableView.setEditing(!tableView.isEditing, animated: true) // Set opposite value of current editing status
+		navigationItem.rightBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit" // Set title depending on the editing status
+	}
 	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
 		return 1
 	}
-	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return events.count
 	}
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return 90
+	}
+	
+	func tableView(_ tableView: UITableView,_ sourceIndexPath: IndexPath,_ proposedDestinationIndexPath: IndexPath) {
+		let movedObject = self.events[sourceIndexPath.row]
+		events.remove(at: sourceIndexPath.row)
+		events.insert(movedObject, at: proposedDestinationIndexPath.row)
+		NSLog("%@", "\(sourceIndexPath.row) => \(proposedDestinationIndexPath.row) \(events)")
+		// To check for correctness enable: self.tableView.reloadData()
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -78,18 +86,14 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		cell.eventName?.text = event.name
 		cell.eventImage?.image = event.photo
 		cell.eventDetail?.text = dateformatter.string(from: event.date) + "\n" + timeformatter.string(from: event.date)
-		cell.showsReorderControl = true
 		return cell
 	}
 	
-	func tableView(_ theTableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+	func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
 		return true
 	}
-	// Override to support conditional editing of the table view.
-	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		// Return false if you do not want the specified item to be editable.
-		return true
-	}
+
+	
 	// Override to support editing the table view.
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
@@ -104,15 +108,25 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		}
 	}
 	
-
-	func tableView(_ theTableView: UITableView, moveRowAt fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
+	func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+		return false
+	}
 	
-		let movedObject = self.events[fromIndexPath.row]
-		events.remove(at: fromIndexPath.row)
-		events.insert(movedObject, at: toIndexPath.row)
-		NSLog("%@", "\(fromIndexPath.row) => \(toIndexPath.row) \(events)")
+	// Override to support conditional editing of the table view.
+	func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		// Return false if you do not want the specified item to be editable.
+		return true
+	}
+	
+	func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+		let movedObject = self.events[sourceIndexPath.row]
+		events.remove(at: sourceIndexPath.row)
+		events.insert(movedObject, at: destinationIndexPath.row)
+		NSLog("%@", "\(sourceIndexPath.row) => \(destinationIndexPath.row) \(events)")
 		// To check for correctness enable: self.tableView.reloadData()
 	}
+	
+	
 	
 	
 	//----------------------------------------------------------------
@@ -124,7 +138,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		dateformatter.dateFormat = "yyyy-MM-dd"
 		
 		for (index,theEvent) in events.enumerated() {
-			let cell = self.theTableView.cellForRow(at: IndexPath(row:index,section:0)) as! EventTableViewCell
+			let cell = self.tableView.cellForRow(at: IndexPath(row:index,section:0)) as! EventTableViewCell
 			cell.eventDetail?.text = dateformatter.string(from: theEvent.date) + "\n" + stringFromTimeInterval(interval: theEvent.date.timeIntervalSince(Date()))
 		}
 	}
@@ -159,7 +173,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			guard let selectedEventCell = sender as? EventTableViewCell else {
 				fatalError("Unexpected sender: \(String(describing: sender))")
 			}
-			guard let indexPath = theTableView.indexPath(for: selectedEventCell) else {
+			guard let indexPath = tableView.indexPath(for: selectedEventCell) else {
 				fatalError("The selected cell is not being displayed by the table")
 			}
 			let selectedEvent = events[indexPath.row]
@@ -176,22 +190,21 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	//MARK: Actions
 	
 	@IBAction func edit(_ sender: UIBarButtonItem) {
-		//theTableView.isEditing = !theTableView.isEditing
-		theTableView.setEditing(true, animated: true)
+		self.isEditing = !self.isEditing
 	}
 	
 	@IBAction func unwindToEventList(sender: UIStoryboardSegue) {
 		//make sure coming from viewcontroller scene
 		if let sourceViewController = sender.source as? ViewController, let event = sourceViewController.event {
 			//make sure to update if editing event, or add new if new event
-			if let selectedIndexPath = theTableView.indexPathForSelectedRow { //if editing a selected row update event and table
+			if let selectedIndexPath = tableView.indexPathForSelectedRow { //if editing a selected row update event and table
 				events[selectedIndexPath.row] = event
-				theTableView.reloadRows(at: [selectedIndexPath], with: .none)
+				tableView.reloadRows(at: [selectedIndexPath], with: .none)
 			} else {
 				// Add a new meal.
 				let newIndexPath = IndexPath(row: events.count, section: 0) // if adding new event, append to table
 				events.append(event)
-				theTableView.insertRows(at: [newIndexPath], with: .automatic)
+				tableView.insertRows(at: [newIndexPath], with: .automatic)
 			}
 			saveEventsToDatabase()
 		}
@@ -225,13 +238,13 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			self.grabEvent { (temp) in
 				if let temp = temp {
 					self.events = temp
-					self.theTableView.beginUpdates()
+					self.tableView.beginUpdates()
 					for index in 0..<temp.count {
 						//insert event rows into table
-						self.theTableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+						self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
 					}
 					self.startTimer()
-					self.theTableView.endUpdates()
+					self.tableView.endUpdates()
 					waitline.leave()
 				}
 			}
@@ -310,7 +323,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				for index in 0..<self.events.count {
 					//update image in table row to corresponding event
 					self.events[index].photo = photo[index]
-					self.theTableView.reloadData()
+					self.tableView.reloadData()
 				}
 			}
 		}
