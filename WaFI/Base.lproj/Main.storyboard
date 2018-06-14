@@ -499,7 +499,7 @@
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" showsReorderControl="YES" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="theCell" rowHeight="90" id="LYM-gZ-R0l" customClass="EventTableViewCell" customModule="WaFI">
                                                 <rect key="frame" x="0.0" y="28" width="375" height="90"/>
                                                 <autoresizingMask key="autoresizingMask"/>
-                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LYM-gZ-R0l" id="N5x-Vo-9el">
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LYM-gZ-R0l" id="N5x-Vo-9el">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="89.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
