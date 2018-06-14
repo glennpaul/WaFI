@@ -23,7 +23,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	var events = [Event]()
 	var currentUser:User = Auth.auth().currentUser!
 	let ref: DatabaseReference! = Database.database().reference()
-	var seconds = 0.0
+	var seconds = 10.0
 	
 
     override func viewDidLoad() {
