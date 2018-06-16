@@ -24,14 +24,16 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	@IBOutlet weak var tableView: UITableView!
 	
-	var events = [Event]()
+	var events = [Event]() {
+		didSet {
+			tableView.reloadData()
+		}
+	}
 	var currentUser:User = Auth.auth().currentUser!
 	let ref: DatabaseReference! = Database.database().reference()
-	var total_events = 17
-	var seconds = 0.0
+	var minload = 1
 	var maxload = 10
-	var shouldLoad = 0
-	var timers = [Timer]()
+	var grabbingPhotos = false
 	
 
     override func viewDidLoad() {
@@ -39,6 +41,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		
 		tableView.delegate = self
 		tableView.dataSource = self
+		
+		
 		// Load any saved events if available or load example events
 		getEventsFromFirebase(withCompletion: nil)
 		
@@ -94,7 +98,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		cell.eventImage?.image = event.photo
 		cell.eventDetail?.text = dateformatter.string(from: event.date)
 		cell.date = event.date
-		cell.expiryTimeInterval = 1000
+		cell.expiryTimeInterval = 1
 		return cell
 	}
 	
@@ -144,66 +148,22 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	/*
 	func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-		timers[indexPath.row].invalidate()
-	}
+		print("hi")
+		if (events.count - indexPath.row) == 5 && grabbingPhotos == false {
+			
+			minload = events.count+1
+			maxload += 8
+			
+			getEventsFromFirebase()
+		}
+	}*/
 	
+	/*
 	
 	func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 		let theCell = cell as? EventTableViewCell
 		startTimer(theCell!, events[indexPath.row].date, indexPath.row)
 	}*/
-	
-	
-	//----------------------------------------------------------------
-	
-	
-	//MARK: Timer functions
-	/*
-	@objc func tickTimer(sender:Timer) {
-		//var started = 0
-		var comp = DateComponents()
-		comp.day = 1
-		let info = sender.userInfo as! cellData
-		
-		for i in 0..<events.count {
-			if events[i].date < Calendar.current.date(byAdding: comp, to: Date())! && events[i].date > Date() {
-				guard let theCell = tableView.cellForRow(at: IndexPath(row: i, section: 0)) as? EventTableViewCell else {
-					print("not yet")
-				}
-				theCell.countdownLabel.text = stringFromTimeInterval(interval: info.date.timeIntervalSince(Date()))
-				
-				events[i].countdownLabel.text = stringFromTimeInterval(interval: info.date.timeIntervalSince(Date())) {
-					print("updated label for events[\(i)]")
-				}
-			} //else if (info.date < Calendar.current.date(byAdding: comp, to: Date())! && info.date < Date()) {
-			//info.cell.countdownLabel.text = "DONE"
-			//}
-		}
-		
-		
-		if info.date < Calendar.current.date(byAdding: comp, to: Date())! && info.date > Date() {
-			
-			info.cell.countdownLabel.text = stringFromTimeInterval(interval: info.date.timeIntervalSince(Date()))
-		} //else if (info.date < Calendar.current.date(byAdding: comp, to: Date())! && info.date < Date()) {
-			//info.cell.countdownLabel.text = "DONE"
-		//}
-		
-	}
-	func startTimer(_ cell:EventTableViewCell,_ theDate:Date, _ row:Int) {
-		timers.append(Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(TableViewController.tickTimer(sender:)), userInfo: cellData(cell: cell,date: theDate), repeats: true))
-	}
-	func stringFromTimeInterval(interval: TimeInterval) -> String {
-		
-		let countdownFormatter = NumberFormatter()
-		countdownFormatter.minimumIntegerDigits = 2
-		let hours = Int(interval) / 3600
-		let minutes = Int(interval) / 60 % 60
-		let seconds = Int(interval) % 60
-		return countdownFormatter.string(from: NSNumber.init(value: hours))! + ":" + countdownFormatter.string(from: NSNumber.init(value: minutes))! + ":" + countdownFormatter.string(from: NSNumber.init(value: seconds))!
-	}*/
-	
-	
-	
 	
 	
 	//----------------------------------------------------------------
@@ -250,12 +210,12 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			//make sure to update if editing event, or add new if new event
 			if let selectedIndexPath = tableView.indexPathForSelectedRow { //if editing a selected row update event and table
 				events[selectedIndexPath.row] = event
-				tableView.reloadRows(at: [selectedIndexPath], with: .none)
+				//tableView.reloadRows(at: [selectedIndexPath], with: .none)
 			} else {
 				// Add a new meal.
-				let newIndexPath = IndexPath(row: events.count, section: 0) // if adding new event, append to table
+				//let newIndexPath = IndexPath(row: events.count, section: 0) // if adding new event, append to table
 				events.append(event)
-				tableView.insertRows(at: [newIndexPath], with: .automatic)
+				//tableView.insertRows(at: [newIndexPath], with: .automatic)
 			}
 			saveEventsToDatabase()
 		}
@@ -287,8 +247,10 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			let thisEvent = [
 				"name":events[index].name,
 				"date": timeFormatter.string(from: (events[index].date))  + " " + dateFormatter.string(from: (events[index].date)),
-				"UID":events[index].UID
-			]
+				"UID":events[index].UID,
+				"number":index+1
+				
+				] as [String : Any]
 			let insertNode = ["\(index+1)":thisEvent]
 			self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
 			let storage = Storage.storage()
@@ -312,15 +274,19 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	func grabEvent(completion: @escaping ([Event]?) -> Void) {
 		let ref = Database.database().reference()
 		var eventArray = [Event]()
-		ref.child("users").child(currentUser.uid).queryLimited(toFirst: UInt(maxload)).observeSingleEvent(of: .value, with: { (snapshot) in
+		print("maxload:\(maxload)")
+		print("reference:\(ref)")
+		ref.child("users").child(currentUser.uid).queryOrdered(byChild: "number").queryStarting(atValue: 1).queryEnding(atValue: maxload).observeSingleEvent(of: .value, with: { (snapshot) in
 			eventArray.removeAll()
+			print("\(snapshot.childrenCount)")
 			let enumerator = snapshot.children
 			while let data = enumerator.nextObject() as? DataSnapshot {
 				guard
-					let theEvent = data.value as? Dictionary<String,String>,
-					let eventName = theEvent["name"],
-					let eventDate = theEvent["date"],
-					let eventUID = theEvent["UID"]
+					let theEvent = data.value as? Dictionary<String,Any>,
+					let eventName = theEvent["name"] as! String?,
+					let eventDate = theEvent["date"] as! String?,
+					let _ = theEvent["number"] as! Int?,
+					let eventUID = theEvent["UID"] as! String?
 					else {
 						print("Error! - Incomplete Data")
 						completion(nil)
@@ -342,13 +308,17 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	func updateTableWithPhotos() {
 		grabPhoto(self.events) { (photo) in
+			self.grabbingPhotos = true
 			if let photo = photo {
 				for index in 0..<self.events.count {
+					print(index)
+					print(photo.count)
+					print(self.events.count)
 					//update image in table row to corresponding event
 					self.events[index].photo = photo[index]
 					self.tableView.reloadData()
 				}
-				self.shouldLoad = 1
+				self.grabbingPhotos = false;
 			}
 		}
 	}
@@ -389,14 +359,16 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 					for index in 0..<temp.count {
 						self.events.append(temp[index])
 					}
-					self.tableView.reloadData()
-					//self.startTimer()
+					//self.tableView.reloadData()
 					self.updateTableWithPhotos()
 				}
 			}
-			DispatchQueue.main.async() { () -> Void in
-			}
 		}
 	}
+	
+	
+	
+	
+	
 
 }

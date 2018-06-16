@@ -59,8 +59,6 @@ class EventTableViewCell: UITableViewCell {
 			countdownLabel.text = ""
 			self.backgroundColor = UIColor.cyan
 		}
-		
-		timeCounter -= 1
 	}
 
 	override func prepareForReuse() {
