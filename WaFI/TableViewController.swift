@@ -153,22 +153,11 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		// Return false if you do not want the specified item to be editable.
 		return true
 	}
+	//function to setup when about to load cell
 	func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-		/*
-		print("minload:\(minload)")
-		print("maxload:\(maxload)")
-		print("maxload:\(events.count)")
-		print("index:\(indexPath.row)")
-		if (events.count - indexPath.row) == refreshThreshold && !grabbingEvents && maxload <= 20 {
-			minload = maxload + 1
-			maxload += 10
-			getEventsFromFirebase()
-		}*/
+		//grab event count first from database
 		grabUserEventCount(){ (count) in
-			print("minload:\(self.minload)")
-			print("maxload:\(self.maxload)")
-			print("maxload:\(self.events.count)")
-			print("index:\(indexPath.row)")
+			//if almost to end of list, not busy grabbing events or photos and theres more events to grab, then incerement loading function and grab events
 			if (self.events.count - indexPath.row) == self.refreshThreshold && !self.grabbingEvents && self.maxload <= count {
 				self.minload = self.maxload + 1
 				self.maxload += 10
@@ -402,11 +391,11 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			}
 		}
 	}
-	//function for grabbing events from firebase
+	//function for grabbing event count
 	func grabUserEventCount(completion: @escaping (Int) -> Void) {
-		//setup reference and array to be used
+		//setup reference to be used
 		let ref = Database.database().reference()
-		//grab children event of user and insert to array (only set amount from minload to maxload)
+		//grab event count and pass to function to load more
 		ref.child("events_count").child(currentUser.uid).observeSingleEvent(of: .value, with: { (snapshot) in
 			let count = (snapshot.value as? Int)!
 			completion(count)
