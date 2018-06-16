@@ -263,9 +263,11 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
 				//if editing a selected row update event and table
 				events[selectedIndexPath.row] = event
+				events[selectedIndexPath.row].modified = true
 			} else {
 				// Add a new meal to end of table
 				events.append(event)
+				events[events.count-1].modified = true
 			}
 			//make sure to save changes
 			saveEventsToDatabase()
