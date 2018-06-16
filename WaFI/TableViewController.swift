@@ -419,7 +419,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	//function for uploading single image to firebase storage
 	func uploadImage(_ thisEvent:Event,_ thisRef:StorageReference) {
-		let data = UIImageJPEGRepresentation(thisEvent.photo!, 1)
+		let data = UIImageJPEGRepresentation(thisEvent.photo!, 0.5)
 		let imageRef = thisRef.child("/event_images/\(currentUser.uid)_\(thisEvent.UID)_image.png")
 		_ = imageRef.putData(data!, metadata:nil,completion:{(metadata,error)
 			in guard metadata != nil else {
