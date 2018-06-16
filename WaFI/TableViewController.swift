@@ -264,6 +264,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				//if editing a selected row update event and table
 				events[selectedIndexPath.row] = event
 				events[selectedIndexPath.row].modified = true
+				//trial for committing
 			} else {
 				// Add a new meal to end of table
 				events.append(event)
