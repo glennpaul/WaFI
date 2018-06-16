@@ -16,6 +16,7 @@ class Event {
     var photo: UIImage?
     var date: Date
 	var UID: String
+	var modified: Bool = false;
     
     struct PropertyKey {
         static let name = "name"

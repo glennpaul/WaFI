@@ -151,8 +151,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				}
 			}
 		} else if editingStyle == .insert {
-			//save to databse if inserting cell
-			saveEventsToDatabase()
+			//never reached
 		}
 	}
 	//prevent indentation
@@ -245,8 +244,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	@IBAction func logOut(_ sender: UIBarButtonItem) {
 		if Auth.auth().currentUser != nil {
 			do {
-				//save events and their data first, then log out and return to sign in page
-				saveEventsToDatabase()
+				//log out and return to sign in page
 				try Auth.auth().signOut()
 				let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "signInPage")
 				present(vc, animated: true, completion: nil)
@@ -398,8 +396,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			let storageRef = storage.reference()
 			//uploadImage(events[index],storageRef)
 			//update event count
-			let insertCount = ["\(currentUser.uid)":events.count]
-			self.ref.child("events_count/").updateChildValues(insertCount)
+			//let insertCount = ["\(currentUser.uid)":events.count]//replace with cloud function
+			//self.ref.child("events_count/").updateChildValues(insertCount)//replace with cloud function
 		}
 	}
 	//function for uploading single image to firebase storage
