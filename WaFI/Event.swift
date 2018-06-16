@@ -25,7 +25,7 @@ class Event {
     
 	init?(name: String, photo: UIImage?, date: Date, UID:String) {
         // Initialization should fail if there is no name or if the rating is negative.
-        if name.isEmpty  {
+        if name.isEmpty {
             return nil
         }
         // Initialize stored properties.

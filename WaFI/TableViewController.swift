@@ -280,7 +280,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 						self.events.append(temp[index])
 					}
 					//grab photos once array has events
-					self.updateTableWithPhotos()
+					//self.updateTableWithPhotos()
+					self.grabbingEvents = false
 				}
 			}
 		}
@@ -395,7 +396,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			//save photo to storage
 			let storage = Storage.storage()
 			let storageRef = storage.reference()
-			uploadImage(events[index],storageRef)
+			//uploadImage(events[index],storageRef)
 			//update event count
 			let insertCount = ["\(currentUser.uid)":events.count]
 			self.ref.child("events_count/").updateChildValues(insertCount)
