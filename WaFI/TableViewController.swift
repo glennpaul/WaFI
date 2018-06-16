@@ -370,7 +370,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			//grab image name from corresponding event
 			print("event_images/\(self.currentUser.uid)_\(temp[i].UID)_image.png")
 			let reference = storageRef.child("event_images/\(self.currentUser.uid)_\(temp[i].UID)_image.png")
-			reference.getData(maxSize: 10 * 1024 * 1024) { (data, error) -> Void in
+			reference.getData(maxSize: 2 * 1024 * 1024) { (data, error) -> Void in
 				if (error != nil) {
 					print(error!)
 				} else {
