@@ -20,14 +20,16 @@ class EventTableViewCell: UITableViewCell {
 	private var timeCounter: Double = 0
 	var date:Date = Date()
 	
-	var expiryTimeInterval: TimeInterval? {
+	var shouldSet: TimeInterval? {
+		//start timer when shouldSet indicator set
 		didSet {
 			startTimer()
 		}
 	}
 	
 	private func startTimer() {
-		if let interval = expiryTimeInterval {
+		//setup timer to fire once per second
+		if let interval = shouldSet {
 			timeCounter = interval
 			timer = Timer(timeInterval: 1.0,
 						  repeats: true,
@@ -42,46 +44,46 @@ class EventTableViewCell: UITableViewCell {
 	}
 	
 	@objc func onComplete() {
-		
 		var comp = DateComponents()
 		comp.day = 1
 		
-		guard timeCounter >= 0 else {
+		//remove countdown when not needed
+		guard timeCounter > 0 else {
 			timer?.invalidate()
 			timer = nil
 			return
 		}
+		
+		//set label for correct scenario
 		if date > Calendar.current.date(byAdding: comp, to: Date())! {
+			//if too far, set blank
 			countdownLabel.text = ""
 		} else if date > Date() {
+			//if within a dat, set countdown
 			countdownLabel.text = stringFromTimeInterval(interval: date.timeIntervalSince(Date()))
 		} else {
+			//if past, clear label, color cell and set timer to be removed
 			countdownLabel.text = ""
 			self.backgroundColor = UIColor.cyan
+			timeCounter = 0
 		}
 	}
 
+	//remove formatting for reuse
 	override func prepareForReuse() {
 		super.prepareForReuse()
-		
 		timer?.invalidate()
 		timer = nil
 		countdownLabel.text = ""
 		self.backgroundColor = UIColor.white
 	}
 	
-    override func awakeFromNib() {
-        super.awakeFromNib()
-		self.indentationWidth = -15
-        // Initialization code
-    }
-	
+	// Configure the view for the selected state
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        // Configure the view for the selected state
     }
 	
-	
+	//convert time difference into string to be displayed as countdown
 	func stringFromTimeInterval(interval: TimeInterval) -> String {
 		let countdownFormatter = NumberFormatter()
 		countdownFormatter.minimumIntegerDigits = 2
