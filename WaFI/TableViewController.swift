@@ -6,6 +6,11 @@
 //  Copyright © 2018 Paul Sumido. All rights reserved.
 //
 
+struct cellData {
+	let cell:EventTableViewCell
+	let date:Date
+}
+
 import UIKit
 import os.log
 
@@ -17,35 +22,35 @@ import FirebaseStorage
 
 class TableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
 	
-	struct cellData {
-		let cell:EventTableViewCell
-		let date:Date
-	}
-	
 	@IBOutlet weak var tableView: UITableView!
 	
+	let currentUser:User = Auth.auth().currentUser!
+	let ref: DatabaseReference! = Database.database().reference()
+	let refreshThreshold = 5
+	
+	var minload = 1
+	var maxload = 20
+	var grabbingEvents = false
 	var events = [Event]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
-	var currentUser:User = Auth.auth().currentUser!
-	let ref: DatabaseReference! = Database.database().reference()
-	var minload = 1
-	var maxload = 20
-	var grabbingEvents = false
-	var refreshThreshold = 5
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
 	//----------------------------------------------------------------
-	
-	
 	//MARK: Setup
 	
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		
 		//setup delegate and datasource for UITableView
 		tableView.delegate = self
@@ -58,19 +63,25 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		// Load any saved events if available
 		getEventsFromFirebase(withCompletion: nil)
 		
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+	}
+	
+	override func didReceiveMemoryWarning() {
+		super.didReceiveMemoryWarning()
+		// Dispose of any resources that can be recreated.
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	//----------------------------------------------------------------
-	
-	
-
 	//MARK: Tableview
+	
 	//turning editing on and off
 	@objc private func toggleEditing() {
 		tableView.setEditing(!tableView.isEditing, animated: true) // Set opposite value of current editing status
@@ -169,12 +180,14 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	
 	
+	
+	
+	
+	
+	
+	
 	//----------------------------------------------------------------
-	
-	
-	
 	// MARK: Navigation
-	// In a storyboard-based application, you will often want to do a little preparation before navigation
 	
 	//prepare seque into adding ne wmeal or editing meal
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -203,9 +216,12 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	
 	
+	
+	
+	
+	
+	
 	//----------------------------------------------------------------
-	
-	
 	//MARK: Actions
 	
 	//setup once back from adding meal or editing meal
@@ -243,52 +259,31 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	
 	
-	//----------------------------------------------------------------
 	
+	
+	
+	
+	
+	
+	//----------------------------------------------------------------
 	//MARK: Database and Storage Functions
 	
-	//save events in table to firebase
-	private func saveEventsToDatabase() {
-		
-		//setup time to string formatters
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "MMM d, yyyy" //date format
-		let timeFormatter = DateFormatter()
-		timeFormatter.dateFormat = "h:mm a" //time format
-		
-		//setup and save each event
-		for (index,_) in events.enumerated() {
-			//setup node
-			let thisEvent = [
-				"name":events[index].name,
-				"date": timeFormatter.string(from: (events[index].date))  + " " + dateFormatter.string(from: (events[index].date)),
-				"UID":events[index].UID,
-				"number":index+1
-				
-				] as [String : Any]
-			let insertNode = ["\(index+1)":thisEvent]
-			//save node
-			self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
-			//save photo to storage
-			let storage = Storage.storage()
-			let storageRef = storage.reference()
-			uploadImage(events[index],storageRef)
-			//update event count
-			let insertCount = ["\(currentUser.uid)":events.count]
-			self.ref.child("events_count/").updateChildValues(insertCount)
-		}
-	}
-	//function for uploading single image to firebase storage
-	func uploadImage(_ thisEvent:Event,_ thisRef:StorageReference) {
-		let data = UIImageJPEGRepresentation(thisEvent.photo!, 1)
-		let imageRef = thisRef.child("/event_images/\(currentUser.uid)_\(thisEvent.UID)_image.png")
-		_ = imageRef.putData(data!, metadata:nil,completion:{(metadata,error)
-			in guard metadata != nil else {
-				//for debugging errors
-				print(error!)
-				return
+	
+	func getEventsFromFirebase(withCompletion completion: (() -> ())? = nil)  {
+		// get the data from data source in background thread
+		self.grabbingEvents = true
+		DispatchQueue.global(qos: DispatchQoS.background.qosClass).async() { () -> Void in
+			self.grabEvent { (temp) in
+				if let temp = temp {
+					for index in 0..<temp.count {
+						//add grabbed events to event array data source
+						self.events.append(temp[index])
+					}
+					//grab photos once array has events
+					self.updateTableWithPhotos()
+				}
 			}
-		})
+		}
 	}
 	//function for grabbing events from firebase
 	func grabEvent(completion: @escaping ([Event]?) -> Void) {
@@ -375,21 +370,48 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			completionImage(thePhotos)
 		}
 	}
-	func getEventsFromFirebase(withCompletion completion: (() -> ())? = nil)  {
-		// get the data from data source in background thread
-		self.grabbingEvents = true
-		DispatchQueue.global(qos: DispatchQoS.background.qosClass).async() { () -> Void in
-			self.grabEvent { (temp) in
-				if let temp = temp {
-					for index in 0..<temp.count {
-						//add grabbed events to event array data source
-						self.events.append(temp[index])
-					}
-					//grab photos once array has events
-					self.updateTableWithPhotos()
-				}
-			}
+	//save events in table to firebase
+	private func saveEventsToDatabase() {
+		
+		//setup time to string formatters
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MMM d, yyyy" //date format
+		let timeFormatter = DateFormatter()
+		timeFormatter.dateFormat = "h:mm a" //time format
+		
+		//setup and save each event
+		for (index,_) in events.enumerated() {
+			//setup node
+			let thisEvent = [
+				"name":events[index].name,
+				"date": timeFormatter.string(from: (events[index].date))  + " " + dateFormatter.string(from: (events[index].date)),
+				"UID":events[index].UID,
+				"number":index+1
+				
+				] as [String : Any]
+			let insertNode = ["\(index+1)":thisEvent]
+			//save node
+			self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
+			//save photo to storage
+			let storage = Storage.storage()
+			let storageRef = storage.reference()
+			uploadImage(events[index],storageRef)
+			//update event count
+			let insertCount = ["\(currentUser.uid)":events.count]
+			self.ref.child("events_count/").updateChildValues(insertCount)
 		}
+	}
+	//function for uploading single image to firebase storage
+	func uploadImage(_ thisEvent:Event,_ thisRef:StorageReference) {
+		let data = UIImageJPEGRepresentation(thisEvent.photo!, 1)
+		let imageRef = thisRef.child("/event_images/\(currentUser.uid)_\(thisEvent.UID)_image.png")
+		_ = imageRef.putData(data!, metadata:nil,completion:{(metadata,error)
+			in guard metadata != nil else {
+				//for debugging errors
+				print(error!)
+				return
+			}
+		})
 	}
 	//function for grabbing event count
 	func grabUserEventCount(completion: @escaping (Int) -> Void) {
@@ -405,5 +427,10 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	
 	
-
+	
+	
+	
+	
+	
+	
 }
