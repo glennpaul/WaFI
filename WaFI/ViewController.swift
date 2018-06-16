@@ -226,8 +226,6 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
             saveButton.isEnabled = false
         }
     }
-    
-    
 
 
 }
