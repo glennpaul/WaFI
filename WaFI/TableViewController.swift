@@ -86,6 +86,9 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	@objc private func toggleEditing() {
 		tableView.setEditing(!tableView.isEditing, animated: true) // Set opposite value of current editing status
 		navigationItem.rightBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit" // Set title depending on the editing status
+		if !tableView.isEditing {
+			saveEventsToDatabase()//save only after signaling done editing
+		}
 	}
 	//set sections in table
 	func numberOfSectionsInTableView(tableView: UITableView) -> Int {
