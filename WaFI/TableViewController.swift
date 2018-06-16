@@ -32,8 +32,9 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	var currentUser:User = Auth.auth().currentUser!
 	let ref: DatabaseReference! = Database.database().reference()
 	var minload = 1
-	var maxload = 10
-	var grabbingPhotos = false
+	var maxload = 20
+	var grabbingEvents = false
+	var refreshThreshold = 5
 	
 	
 	
@@ -152,18 +153,29 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		// Return false if you do not want the specified item to be editable.
 		return true
 	}
-	/*
-	
 	func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-	if (events.count - indexPath.row) == 5 && grabbingPhotos == false {
-	
-	minload = events.count+1
-	maxload += 8
-	
-	getEventsFromFirebase()
+		/*
+		print("minload:\(minload)")
+		print("maxload:\(maxload)")
+		print("maxload:\(events.count)")
+		print("index:\(indexPath.row)")
+		if (events.count - indexPath.row) == refreshThreshold && !grabbingEvents && maxload <= 20 {
+			minload = maxload + 1
+			maxload += 10
+			getEventsFromFirebase()
+		}*/
+		grabUserEventCount(){ (count) in
+			print("minload:\(self.minload)")
+			print("maxload:\(self.maxload)")
+			print("maxload:\(self.events.count)")
+			print("index:\(indexPath.row)")
+			if (self.events.count - indexPath.row) == self.refreshThreshold && !self.grabbingEvents && self.maxload <= count {
+				self.minload = self.maxload + 1
+				self.maxload += 10
+				self.getEventsFromFirebase()
+			}
+		}
 	}
-	}*/
-	
 	
 	
 	
@@ -295,7 +307,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		let ref = Database.database().reference()
 		var eventArray = [Event]()
 		//grab children event of user and insert to array (only set amount from minload to maxload)
-		ref.child("users").child(currentUser.uid).queryOrdered(byChild: "number").queryStarting(atValue: 1).queryEnding(atValue: maxload).observeSingleEvent(of: .value, with: { (snapshot) in
+		ref.child("users").child(currentUser.uid).queryOrdered(byChild: "number").queryStarting(atValue: minload).queryEnding(atValue: maxload).observeSingleEvent(of: .value, with: { (snapshot) in
 			//make sure array to be passed is empty first
 			eventArray.removeAll()
 			let enumerator = snapshot.children
@@ -331,7 +343,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	func updateTableWithPhotos() {
 		grabPhoto(self.events) { (photo) in
-			self.grabbingPhotos = true
 			if let photo = photo {
 				for index in 0..<self.events.count {
 					print(index)
@@ -340,8 +351,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 					//update image in table row to corresponding event
 					self.events[index].photo = photo[index]
 					self.tableView.reloadData()
+					self.grabbingEvents = false
 				}
-				self.grabbingPhotos = false;
 			}
 		}
 	}
@@ -377,6 +388,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	func getEventsFromFirebase(withCompletion completion: (() -> ())? = nil)  {
 		// get the data from data source in background thread
+		self.grabbingEvents = true
 		DispatchQueue.global(qos: DispatchQoS.background.qosClass).async() { () -> Void in
 			self.grabEvent { (temp) in
 				if let temp = temp {
@@ -390,7 +402,16 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			}
 		}
 	}
-	
+	//function for grabbing events from firebase
+	func grabUserEventCount(completion: @escaping (Int) -> Void) {
+		//setup reference and array to be used
+		let ref = Database.database().reference()
+		//grab children event of user and insert to array (only set amount from minload to maxload)
+		ref.child("events_count").child(currentUser.uid).observeSingleEvent(of: .value, with: { (snapshot) in
+			let count = (snapshot.value as? Int)!
+			completion(count)
+		})
+	}
 	
 	
 	

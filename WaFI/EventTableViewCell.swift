@@ -19,7 +19,6 @@ class EventTableViewCell: UITableViewCell {
 	private var timer: Timer?
 	private var timeCounter: Double = 0
 	var date:Date = Date()
-	
 	var shouldSet: TimeInterval? {
 		//start timer when shouldSet indicator set
 		didSet {
@@ -43,6 +42,7 @@ class EventTableViewCell: UITableViewCell {
 		RunLoop.current.add(timer!, forMode: .commonModes)
 	}
 	
+	//function to update labels when timer fires
 	@objc func onComplete() {
 		var comp = DateComponents()
 		comp.day = 1
