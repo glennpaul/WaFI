@@ -101,10 +101,21 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	//functionality for moving cell
 	func tableView(_ tableView: UITableView,_ sourceIndexPath: IndexPath,_ proposedDestinationIndexPath: IndexPath) {
+		//re-arrange start and end rows depending on if start was later than end
+		var start = sourceIndexPath.row
+		var end = proposedDestinationIndexPath.row
+		if start > end {
+			start = proposedDestinationIndexPath.row
+			end = sourceIndexPath.row
+		}
+		//move event
 		let movedObject = self.events[sourceIndexPath.row]
 		events.remove(at: sourceIndexPath.row)
 		events.insert(movedObject, at: proposedDestinationIndexPath.row)
-		NSLog("%@", "\(sourceIndexPath.row) => \(proposedDestinationIndexPath.row) \(events)")
+		//iterate through rows of modified position and set modified to true
+		for i in start...end {
+			events[i].modified = true
+		}
 	}
 	//setup of cell from data source
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -146,7 +157,12 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 					// Delete the row from the data source
 					self.events.remove(at: indexPath.row)
 					tableView.deleteRows(at: [indexPath], with: .fade)
+					for i in (indexPath.row)..<self.events.count {
+						//make sure all of the events after are saved since position change
+						self.events[i].modified = true
+					}
 					self.saveEventsToDatabase()
+					//make sure event at end of list in firebase is deleted so it isn't duplicated
 					self.ref.child("users").child(self.currentUser.uid).child("\(self.events.count+1)").removeValue()
 				}
 			}
@@ -380,24 +396,25 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		
 		//setup and save each event
 		for (index,_) in events.enumerated() {
-			//setup node
-			let thisEvent = [
-				"name":events[index].name,
-				"date": timeFormatter.string(from: (events[index].date))  + " " + dateFormatter.string(from: (events[index].date)),
-				"UID":events[index].UID,
-				"number":index+1
-				
-				] as [String : Any]
-			let insertNode = ["\(index+1)":thisEvent]
-			//save node
-			self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
-			//save photo to storage
-			let storage = Storage.storage()
-			let storageRef = storage.reference()
-			//uploadImage(events[index],storageRef)
-			//update event count
-			//let insertCount = ["\(currentUser.uid)":events.count]//replace with cloud function
-			//self.ref.child("events_count/").updateChildValues(insertCount)//replace with cloud function
+			if events[index].modified == true {
+				//setup node
+				let thisEvent = [
+					"name":events[index].name,
+					"date": timeFormatter.string(from: (events[index].date))  + " " + dateFormatter.string(from: (events[index].date)),
+					"UID":events[index].UID,
+					"number":index+1
+					
+					] as [String : Any]
+				let insertNode = ["\(index+1)":thisEvent]
+				//save node
+				self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
+				//save photo to storage
+				let storage = Storage.storage()
+				let storageRef = storage.reference()
+				//uploadImage(events[index],storageRef)
+				//after saving, reset modified boolean to false
+				events[index].modified = false
+			}
 		}
 	}
 	//function for uploading single image to firebase storage
