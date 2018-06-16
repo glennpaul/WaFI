@@ -100,18 +100,18 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		return 90
 	}
 	//functionality for moving cell
-	func tableView(_ tableView: UITableView,_ sourceIndexPath: IndexPath,_ proposedDestinationIndexPath: IndexPath) {
+	func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
 		//re-arrange start and end rows depending on if start was later than end
 		var start = sourceIndexPath.row
-		var end = proposedDestinationIndexPath.row
+		var end = destinationIndexPath.row
 		if start > end {
-			start = proposedDestinationIndexPath.row
+			start = destinationIndexPath.row
 			end = sourceIndexPath.row
 		}
 		//move event
 		let movedObject = self.events[sourceIndexPath.row]
 		events.remove(at: sourceIndexPath.row)
-		events.insert(movedObject, at: proposedDestinationIndexPath.row)
+		events.insert(movedObject, at: destinationIndexPath.row)
 		//iterate through rows of modified position and set modified to true
 		for i in start...end {
 			events[i].modified = true
