@@ -144,8 +144,8 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         }
         
         // Set photoImageView to display the selected image.
-        photoImage.image = selectedImage
-        event?.photo = selectedImage
+        photoImage.image = resize(selectedImage)
+        event?.photo = resize(selectedImage)
         
         // Dismiss the picker.
         dismiss(animated: true, completion: nil)
@@ -212,6 +212,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
     
     
     //MARK: Private Methods
+	//enable/disable save button when required
     private func updateSaveButtonState() {
         //check if creating or modifying event
         let tempName = navigationItem.title
@@ -226,6 +227,42 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
             saveButton.isEnabled = false
         }
     }
+	//resize image to save data when uploading/downloading
+	private func resize(_ image: UIImage) -> UIImage {
+		var actualHeight = Float(image.size.height)
+		var actualWidth = Float(image.size.width)
+		let maxHeight: Float = 1024.0
+		let maxWidth: Float = 1024.0
+		var imgRatio: Float = actualWidth / actualHeight
+		let maxRatio: Float = maxWidth / maxHeight
+		let compressionQuality: Float = 1 //change for better compression
+		//50 percent compression
+		if actualHeight > maxHeight || actualWidth > maxWidth {
+			if imgRatio < maxRatio {
+				//adjust width according to maxHeight
+				imgRatio = maxHeight / actualHeight
+				actualWidth = imgRatio * actualWidth
+				actualHeight = maxHeight
+			}
+			else if imgRatio > maxRatio {
+				//adjust height according to maxWidth
+				imgRatio = maxWidth / actualWidth
+				actualHeight = imgRatio * actualHeight
+				actualWidth = maxWidth
+			}
+			else {
+				actualHeight = maxHeight
+				actualWidth = maxWidth
+			}
+		}
+		let rect = CGRect(x: 0.0, y: 0.0, width: CGFloat(actualWidth), height: CGFloat(actualHeight))
+		UIGraphicsBeginImageContext(rect.size)
+		image.draw(in: rect)
+		let img = UIGraphicsGetImageFromCurrentImageContext()
+		let imageData = UIImageJPEGRepresentation(img!, CGFloat(compressionQuality))
+		UIGraphicsEndImageContext()
+		return UIImage(data: imageData!) ?? UIImage()
+	}
 
 
 }

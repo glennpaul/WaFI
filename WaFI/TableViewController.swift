@@ -18,6 +18,7 @@ import FirebaseStorage
 
 class TableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
 	
+	//setup outlet for table
 	@IBOutlet weak var tableView: UITableView!
 	
 	//setup firebase user and references
@@ -295,7 +296,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	//----------------------------------------------------------------
 	//MARK: Database and Storage Functions
-	
 	
 	func getEventsFromFirebase(withCompletion completion: (() -> ())? = nil)  {
 		//set indicator to grabbing events as true and get the data from data source in background thread
