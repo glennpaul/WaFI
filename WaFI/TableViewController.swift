@@ -16,7 +16,7 @@ import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
 
-class TableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
+class TableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 	
 	//setup outlet for table
 	@IBOutlet weak var tableView: UITableView!
