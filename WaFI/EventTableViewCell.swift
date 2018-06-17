@@ -44,6 +44,7 @@ class EventTableViewCell: UITableViewCell {
 	
 	//function to update labels when timer fires
 	@objc func onComplete() {
+		
 		var comp = DateComponents()
 		comp.day = 1
 		

@@ -43,5 +43,7 @@
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>for usage with image picker</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>something or other</string>
 </dict>
 </plist>

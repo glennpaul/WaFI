@@ -61,6 +61,9 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		//make sure seperator has no inset
+		tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+		
 		//setup delegate and datasource for UITableView
 		tableView.delegate = self
 		tableView.dataSource = self
@@ -74,7 +77,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		full.dateFormat = "h:mm a MMM d, yyyy "
 		medMonthFormatter.dateFormat = "MMM d, yyyy" //date format
 		timeFormatter.dateFormat = "h:mm a" //time format
-		
 		
 		// Load any saved events if available
 		getEventsFromFirebase(withCompletion: nil)
