@@ -58,13 +58,15 @@ class EventTableViewCell: UITableViewCell {
 		if date > Calendar.current.date(byAdding: comp, to: Date())! {
 			//if too far, set blank
 			countdownLabel.text = ""
+			self.backgroundColor = UIColor.FlatColor.Green.BadboyGreen
 		} else if date > Date() {
-			//if within a dat, set countdown
+			//if within a day, set countdown
 			countdownLabel.text = stringFromTimeInterval(interval: date.timeIntervalSince(Date()))
+			self.backgroundColor = UIColor.FlatColor.Yellow.Energy
 		} else {
 			//if past, clear label, color cell and set timer to be removed
 			countdownLabel.text = ""
-			self.backgroundColor = UIColor.FlatColor.Red.TerraCotta
+			self.backgroundColor = UIColor.FlatColor.Red.BadBoyRed
 			timeCounter = 0
 		}
 	}
@@ -75,7 +77,6 @@ class EventTableViewCell: UITableViewCell {
 		timer?.invalidate()
 		timer = nil
 		countdownLabel.text = ""
-		self.backgroundColor = UIColor.white
 	}
 	
 	// Configure the view for the selected state
@@ -111,6 +112,7 @@ extension UIColor {
 	struct FlatColor {
 		struct Green {
 			static let Fern = UIColor(netHex: 0x6ABB72)
+			static let BadboyGreen = UIColor(netHex: 0xBADBAD)
 			static let MountainMeadow = UIColor(netHex: 0x3ABB9D)
 			static let ChateauGreen = UIColor(netHex: 0x4DA664)
 			static let PersianGreen = UIColor(netHex: 0x2CA786)
@@ -141,10 +143,11 @@ extension UIColor {
 		}
 		
 		struct Red {
-			static let TerraCotta = UIColor(netHex: 0xE66B5B)
+			static let TerraCotta = UIColor(netHex: 0xD8978A)
 			static let Valencia = UIColor(netHex: 0xCC4846)
 			static let Cinnabar = UIColor(netHex: 0xDC5047)
 			static let WellRead = UIColor(netHex: 0xB33234)
+			static let BadBoyRed = UIColor(netHex: 0xC39797)
 		}
 		
 		struct Gray {

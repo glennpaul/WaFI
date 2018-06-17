@@ -21,6 +21,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
 	var event: Event?
 	var countDown: Timer?
 	var seconds = 0.0
+	
     
 
     override func viewDidLoad() {
