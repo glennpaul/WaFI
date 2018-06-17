@@ -287,6 +287,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			} catch let error as NSError {
 				print(error.localizedDescription)
 			}
+			saveEventsToDatabase()
 		}
 	}
 	//sort events by date
@@ -294,16 +295,25 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		events.sort {
 			$0.date < $1.date
 		}
+		setAllModified()
 	}
 	//sort events by name
 	@IBAction func sortByName(_ sender: UIBarButtonItem) {
 		events.sort {
 			$0.name < $1.name
 		}
+		setAllModified()
 	}
 	//reverse the order of the events
 	@IBAction func reverseEvents(_ sender: UIBarButtonItem) {
 		events.reverse()
+		setAllModified()
+	}
+	//allow for saving all events easily
+	func setAllModified() {
+		for (_,event) in events.enumerated() {
+			event.modified = true
+		}
 	}
 	
 	
