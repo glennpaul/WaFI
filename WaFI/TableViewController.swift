@@ -287,6 +287,22 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			}
 		}
 	}
+	//sort events by date
+	@IBAction func sortByDate(_ sender: Any) {
+		events.sort {
+			$0.date < $1.date
+		}
+	}
+	//sort events by name
+	@IBAction func sortByName(_ sender: UIBarButtonItem) {
+		events.sort {
+			$0.name < $1.name
+		}
+	}
+	//reverse the order of the events
+	@IBAction func reverseEvents(_ sender: UIBarButtonItem) {
+		events.reverse()
+	}
 	
 	
 	
