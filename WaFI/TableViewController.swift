@@ -55,6 +55,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	
 	
+	
 	//----------------------------------------------------------------
 	//MARK: Setup
 	
@@ -149,11 +150,16 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		// Fetches the appropriate meal for the data source layout.
 		let row = indexPath.row
 		let event = events[row]
+		cell.UID = currentUser.uid as String
 		//set values in cells
+		
+		cell.myEvent? = event
+		/*
 		cell.eventName?.text = event.name
 		cell.eventImage?.image = event.photo
 		cell.eventDetail?.text = medDashFormatter.string(from: event.date)
 		cell.date = event.date
+		*/
 		//start timer
 		cell.shouldSet = 1
 		//add cell to table
@@ -338,8 +344,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 						//add grabbed events to event array data source
 						self.events.append(temp[index])
 					}
-					//grab photos once array has events
-					//self.updateTableWithPhotos()
 					self.grabbingEvents = false
 				}
 			}
@@ -383,52 +387,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			completion(eventArray)
 		})
 	}
-	func updateTableWithPhotos() {
-		grabPhoto(self.events) { (photo) in
-			if let photo = photo {
-				for index in 0..<self.events.count {
-					//update image in table row to corresponding event
-					self.events[index].photo = photo[index]
-					self.tableView.reloadData()
-					self.grabbingEvents = false
-				}
-			}
-		}
-	}
-	//function for grabbing individual photos
-	func grabPhoto(_ temp:[Event], completionImage: @escaping ([UIImage?]?) -> Void) {
-		//setup reference and array to be used
-		var thePhotos = [UIImage?](repeating: nil, count: temp.count)
-		//setup GCD
-		let wait = DispatchGroup()
-		for _ in 0..<temp.count {
-			wait.enter()
-		}
-		//iterate through events and grab thier images from storage
-		for i in 0..<temp.count {
-			//grab image name from corresponding event
-			print("event_images/\(self.currentUser.uid)_\(temp[i].UID)_image.png")
-			let reference = firebaseStorage.child("event_images/\(self.currentUser.uid)_\(temp[i].UID)_image.png")
-			reference.getData(maxSize: 2 * 1024 * 1024) { (data, error) -> Void in
-				if (error != nil) {
-					print(error!)
-				} else {
-					//insert images to image array in correct order
-					thePhotos[i] = UIImage(data: data!)!
-					wait.leave()
-				}
-			}
-		}
-		wait.notify(queue: .main) {
-			//pass the images grabbed from firebase storage to function that will update table
-			completionImage(thePhotos)
-		}
-	}
 	//save events in table to firebase
 	private func saveEventsToDatabase() {
-		
-		//setup time to string formatters
-		
 		//setup and save each event
 		for (index,_) in events.enumerated() {
 			if events[index].modified == true {

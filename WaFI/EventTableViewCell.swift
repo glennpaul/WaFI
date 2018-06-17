@@ -7,6 +7,13 @@
 //
 
 import UIKit
+import os.log
+
+import Foundation
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
+import FirebaseStorage
 
 class EventTableViewCell: UITableViewCell {
     
@@ -16,6 +23,8 @@ class EventTableViewCell: UITableViewCell {
 	@IBOutlet weak var eventDetail: UILabel!
 	@IBOutlet weak var countdownLabel: UILabel!
 	
+	var UID:String = ""
+	let firebaseStorage = Storage.storage().reference()
 	private var timer: Timer?
 	private var timeCounter: Double = 0
 	var date:Date = Date()
@@ -23,6 +32,28 @@ class EventTableViewCell: UITableViewCell {
 		//start timer when shouldSet indicator set
 		didSet {
 			startTimer()
+		}
+	}
+	var myEvent:Event? {
+		didSet {
+			
+			let medDashFormatter = DateFormatter()
+			medDashFormatter.dateFormat = "yyyy-MM-dd"
+			
+			eventName?.text = myEvent?.name
+			eventImage?.image = myEvent?.photo
+			eventDetail?.text = medDashFormatter.string(from: (myEvent?.date)!)
+			date = (myEvent?.date)!
+			
+			print("event_images/\(UID)_\(String(describing: myEvent?.UID))_image.png")
+			let reference = firebaseStorage.child("event_images/\(UID)_\(String(describing: myEvent?.UID))_image.png")
+			reference.getData(maxSize: 2 * 1024 * 1024) { (data, error) -> Void in
+				if (error != nil) {
+					print(error!)
+				} else {
+					self.eventImage.image = UIImage(data: data!)!
+				}
+			}
 		}
 	}
 	
