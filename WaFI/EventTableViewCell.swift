@@ -15,6 +15,7 @@ import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
 
+
 class EventTableViewCell: UITableViewCell {
     
     //MARK: Properties
@@ -23,37 +24,51 @@ class EventTableViewCell: UITableViewCell {
 	@IBOutlet weak var eventDetail: UILabel!
 	@IBOutlet weak var countdownLabel: UILabel!
 	
-	var UID:String = ""
+	
+	let imageCache = NSCache<NSString, UIImage>()
 	let firebaseStorage = Storage.storage().reference()
 	private var timer: Timer?
 	private var timeCounter: Double = 0
 	var date:Date = Date()
+	var UID:String = ""
+	var eventUID: String = "" {
+		willSet {
+			let theUID = newValue
+			print("event_images/\(UID)_\(theUID)_image.png")
+			let reference = firebaseStorage.child("event_images/\(UID)_\(theUID)_image.png")
+			if didChangeImage == false {
+				if let cachedImage = imageCache.object(forKey: theUID as NSString) {
+					print("grabbed from Cache")
+					self.eventImage.image = cachedImage
+				} else {
+					reference.getData(maxSize: 2 * 1024 * 1024) { (data, error) -> Void in
+						if (error != nil) {
+							print(error!)
+						} else {
+							let toBeCached = UIImage(data: data!)!
+							self.imageCache.setObject(toBeCached, forKey: theUID as NSString)
+							self.eventImage.image = toBeCached
+							self.myEvent?.photo = toBeCached
+						}
+					}
+				}
+			} else {
+				eventImage.image = myEvent?.photo
+				didChangeImage = false
+			}
+			
+		}
+	}
 	var shouldSet: TimeInterval? {
 		//start timer when shouldSet indicator set
 		didSet {
 			startTimer()
 		}
 	}
-	var myEvent:Event? {
+	var myEvent:Event?
+	var didChangeImage:Bool? = false {
 		didSet {
-			
-			let medDashFormatter = DateFormatter()
-			medDashFormatter.dateFormat = "yyyy-MM-dd"
-			
-			eventName?.text = myEvent?.name
-			eventImage?.image = myEvent?.photo
-			eventDetail?.text = medDashFormatter.string(from: (myEvent?.date)!)
-			date = (myEvent?.date)!
-			
-			print("event_images/\(UID)_\(String(describing: myEvent?.UID))_image.png")
-			let reference = firebaseStorage.child("event_images/\(UID)_\(String(describing: myEvent?.UID))_image.png")
-			reference.getData(maxSize: 2 * 1024 * 1024) { (data, error) -> Void in
-				if (error != nil) {
-					print(error!)
-				} else {
-					self.eventImage.image = UIImage(data: data!)!
-				}
-			}
+			imageCache.removeObject(forKey: eventUID as NSString)
 		}
 	}
 	
@@ -128,6 +143,7 @@ class EventTableViewCell: UITableViewCell {
 
 
 }
+
 
 extension UIColor {
 	convenience init(red: Int, green: Int, blue: Int) {

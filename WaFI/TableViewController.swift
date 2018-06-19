@@ -145,21 +145,20 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		// Table view cells are reused and should be dequeued using a cell identifier.
 		let cellIdentifier = "theCell"
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? EventTableViewCell  else {
-			fatalError("The dequeued cell is not an instance of MealTableViewCell.")
+			fatalError("The dequeued cell is not an instance of EventTableViewCell.")
 		}
 		// Fetches the appropriate meal for the data source layout.
 		let row = indexPath.row
 		let event = events[row]
 		cell.UID = currentUser.uid as String
-		//set values in cells
 		
-		cell.myEvent? = event
-		/*
+		//set values in cells
 		cell.eventName?.text = event.name
 		cell.eventImage?.image = event.photo
 		cell.eventDetail?.text = medDashFormatter.string(from: event.date)
 		cell.date = event.date
-		*/
+		cell.eventUID = event.UID
+		
 		//start timer
 		cell.shouldSet = 1
 		//add cell to table
@@ -173,23 +172,26 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
 			//delete image from firebase when deleting event
+			print("/event_images/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
 			let reference = firebaseStorage.child("/event_images/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
 			reference.delete { error in
 				if let error = error {
 					print(error)
 				} else {
-					// Delete the row from the data source
-					self.events.remove(at: indexPath.row)
-					tableView.deleteRows(at: [indexPath], with: .fade)
-					for i in (indexPath.row)..<self.events.count {
-						//make sure all of the events after are saved since position change
-						self.events[i].modified = true
-					}
-					self.saveEventsToDatabase()
-					//make sure event at end of list in firebase is deleted so it isn't duplicated
-					self.ref.child("users").child(self.currentUser.uid).child("\(self.events.count+1)").removeValue()
+					
 				}
 			}
+			// Delete the row from the data source
+			self.events.remove(at: indexPath.row)
+			for i in (indexPath.row)..<self.events.count {
+				//make sure all of the events after are saved since position change
+				self.events[i].modified = true
+			}
+			if indexPath.row != self.events.count-1 {
+				//make sure event at end of list in firebase is deleted so it isn't duplicated
+				self.ref.child("users").child(self.currentUser.uid).child("\(self.events.count+1)").removeValue()
+			}
+			self.saveEventsToDatabase()
 		}
 	}
 	//prevent indentation
@@ -245,6 +247,9 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				fatalError("The selected cell is not being displayed by the table")
 			}
 			let selectedEvent = events[indexPath.row]
+			let cell = tableView.cellForRow(at: indexPath) as! EventTableViewCell
+			let thePhoto = cell.eventImage.image
+			selectedEvent.photo = thePhoto
 			ViewController.event = selectedEvent
 		default:
 			fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
@@ -269,10 +274,12 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		if let sourceViewController = sender.source as? ViewController, let event = sourceViewController.event {
 			//make sure to update if editing event, or add new if new event
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
+				let theCell = tableView.cellForRow(at: selectedIndexPath) as! EventTableViewCell
+				theCell.didChangeImage = true
 				//if editing a selected row update event and table
 				events[selectedIndexPath.row] = event
 				events[selectedIndexPath.row].modified = true
-				//trial for committing
+				events[selectedIndexPath.row].UID = event.UID
 			} else {
 				// Add a new meal to end of table
 				events.append(event)
@@ -281,6 +288,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			//make sure to save changes
 			saveEventsToDatabase()
 		}
+		tableView.reloadData()
 	}
 	//functionality for logging out
 	@IBAction func logOut(_ sender: UIBarButtonItem) {
@@ -403,7 +411,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				//save node
 				self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
 				//save photo to storage
-				//uploadImage(events[index],firebaseStorage)
+				uploadImage(events[index],firebaseStorage)
 				//after saving, reset modified boolean to false
 				events[index].modified = false
 			}

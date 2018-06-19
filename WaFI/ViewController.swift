@@ -37,9 +37,10 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
 			let timeFormatter = DateFormatter()
 			timeFormatter.dateFormat = "h:mm a" //time format
 			let newDate = timeFormatter.string(from:event.date)  + " on " + dateFormatter.string(from: event.date)
-			
-            navigationItem.title = event.name
-            photoImage.image = event.photo
+			let theName = event.name
+            navigationItem.title = theName
+			let thePhoto = event.photo
+            photoImage.image = thePhoto
             dateTimeLabel.text = newDate
 			
 			if dateTimeLabel.text != "Event must have Date/Time" {
@@ -147,6 +148,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
         // Set photoImageView to display the selected image.
         photoImage.image = resize(selectedImage)
         event?.photo = resize(selectedImage)
+		
         
         // Dismiss the picker.
         dismiss(animated: true, completion: nil)
