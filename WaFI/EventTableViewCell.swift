@@ -66,7 +66,9 @@ class EventTableViewCell: UITableViewCell {
 				}
 			} else {
 				//if image has changed, set cell image as the new event photo from event and set change back to false
-				eventImage.image = myEvent?.photo
+				let thePhoto = myEvent?.photo
+				self.imageCache.setObject(thePhoto!, forKey: theUID as NSString)
+				eventImage.image = thePhoto
 				didChangeImage = false
 			}
 			

@@ -148,17 +148,22 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		}
 		// Fetches the appropriate meal for the data source layout.
 		let row = indexPath.row
-		let event = events[row]
 		
 		//set event UID for cell, triggers image grab
 		cell.UID = currentUser.uid as String
 		
+		//initialize event values
+		let theName = events[row].name
+		let thePhoto = events[row].photo
+		let theDate = events[row].date
+		let theUID = events[row].UID
+		
 		//set other values in cells
-		cell.eventName?.text = event.name
-		cell.eventImage?.image = event.photo
-		cell.eventDetail?.text = medDashFormatter.string(from: event.date)
-		cell.date = event.date
-		cell.eventUID = event.UID
+		cell.eventName?.text = theName
+		cell.eventImage?.image = thePhoto
+		cell.eventDetail?.text = medDashFormatter.string(from: theDate)
+		cell.date = theDate
+		cell.eventUID = theUID
 		
 		//start timer
 		cell.shouldSet = 1
@@ -274,20 +279,26 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			//make sure to update if editing event, or add new if new event
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
 				let theCell = tableView.cellForRow(at: selectedIndexPath) as! EventTableViewCell
-				theCell.didChangeImage = true
+				//theCell.didChangeImage = true
 				//if editing a selected row update event and table
-				events[selectedIndexPath.row] = event
+				let theEvent = event
+				events[selectedIndexPath.row] = theEvent
 				events[selectedIndexPath.row].modified = true
+				if event.photo != theCell.eventImage.image {
+					theCell.didChangeImage = true
+				}
 				events[selectedIndexPath.row].UID = event.UID
+				theCell.myEvent = theEvent
+				(tableView.cellForRow(at: selectedIndexPath) as! EventTableViewCell).UID = event.UID
 			} else {
 				// Add a new meal to end of table
 				events.append(event)
 				events[events.count-1].modified = true
+				events[events.count-1].UID = event.UID
 			}
 			//make sure to save changes
 			saveEventsToDatabase()
 		}
-		tableView.reloadData()
 	}
 	//functionality for logging out
 	@IBAction func logOut(_ sender: UIBarButtonItem) {
