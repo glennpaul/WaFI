@@ -55,7 +55,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	
 	
-	
 	//----------------------------------------------------------------
 	//MARK: Setup
 	
@@ -150,9 +149,11 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		// Fetches the appropriate meal for the data source layout.
 		let row = indexPath.row
 		let event = events[row]
+		
+		//set event UID for cell, triggers image grab
 		cell.UID = currentUser.uid as String
 		
-		//set values in cells
+		//set other values in cells
 		cell.eventName?.text = event.name
 		cell.eventImage?.image = event.photo
 		cell.eventDetail?.text = medDashFormatter.string(from: event.date)
@@ -172,13 +173,10 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
 			//delete image from firebase when deleting event
-			print("/event_images/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
 			let reference = firebaseStorage.child("/event_images/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
 			reference.delete { error in
 				if let error = error {
 					print(error)
-				} else {
-					
 				}
 			}
 			// Delete the row from the data source
@@ -187,8 +185,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				//make sure all of the events after are saved since position change
 				self.events[i].modified = true
 			}
+			//make sure event at end of list in firebase is deleted so it isn't duplicated
 			if indexPath.row != self.events.count-1 {
-				//make sure event at end of list in firebase is deleted so it isn't duplicated
 				self.ref.child("users").child(self.currentUser.uid).child("\(self.events.count+1)").removeValue()
 			}
 			self.saveEventsToDatabase()
@@ -246,6 +244,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			guard let indexPath = tableView.indexPath(for: selectedEventCell) else {
 				fatalError("The selected cell is not being displayed by the table")
 			}
+			//make sure photo is passed when about to edit event
 			let selectedEvent = events[indexPath.row]
 			let cell = tableView.cellForRow(at: indexPath) as! EventTableViewCell
 			let thePhoto = cell.eventImage.image

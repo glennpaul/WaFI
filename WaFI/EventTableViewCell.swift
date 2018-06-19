@@ -24,50 +24,67 @@ class EventTableViewCell: UITableViewCell {
 	@IBOutlet weak var eventDetail: UILabel!
 	@IBOutlet weak var countdownLabel: UILabel!
 	
-	
-	let imageCache = NSCache<NSString, UIImage>()
+	//reference for storage
 	let firebaseStorage = Storage.storage().reference()
+	
+	//image cache so that table doesn't keep downloading image whenever refreshed/cell dequeued
+	let imageCache = NSCache<NSString, UIImage>()
+	
+	//variables for timer setup
 	private var timer: Timer?
 	private var timeCounter: Double = 0
 	var date:Date = Date()
+	
+	//variables for loading event info per cell
+	var myEvent:Event?
 	var UID:String = ""
 	var eventUID: String = "" {
 		willSet {
+			//grab reference to image
 			let theUID = newValue
-			print("event_images/\(UID)_\(theUID)_image.png")
-			let reference = firebaseStorage.child("event_images/\(UID)_\(theUID)_image.png")
+			
+			//check if image has changed via edit event
 			if didChangeImage == false {
+				//if not changed check if image is already in cache
 				if let cachedImage = imageCache.object(forKey: theUID as NSString) {
-					print("grabbed from Cache")
+					//if in cache, grab image from cache
 					self.eventImage.image = cachedImage
 				} else {
+					//if not in cache, grab reference to image and grab image
+					let reference = firebaseStorage.child("event_images/\(UID)_\(theUID)_image.png")
 					reference.getData(maxSize: 2 * 1024 * 1024) { (data, error) -> Void in
 						if (error != nil) {
 							print(error!)
 						} else {
+							//once image grabbed from firebase, cache it and set image in cell
 							let toBeCached = UIImage(data: data!)!
 							self.imageCache.setObject(toBeCached, forKey: theUID as NSString)
 							self.eventImage.image = toBeCached
-							self.myEvent?.photo = toBeCached
+							//self.myEvent?.photo = toBeCached
 						}
 					}
 				}
 			} else {
+				//if image has changed, set cell image as the new event photo from event and set change back to false
 				eventImage.image = myEvent?.photo
 				didChangeImage = false
 			}
 			
 		}
 	}
+	
+	//variable for if time interval should start
 	var shouldSet: TimeInterval? {
 		//start timer when shouldSet indicator set
 		didSet {
 			startTimer()
 		}
 	}
-	var myEvent:Event?
+	
+	//indicator if image has changed due to changing it in event edit
 	var didChangeImage:Bool? = false {
 		didSet {
+			//if indicator set, make sure to clear cache for that UID event
 			imageCache.removeObject(forKey: eventUID as NSString)
 		}
 	}
@@ -144,8 +161,9 @@ class EventTableViewCell: UITableViewCell {
 
 }
 
-
+//create colors to use for event scenarios
 extension UIColor {
+	//init with RGB values
 	convenience init(red: Int, green: Int, blue: Int) {
 		assert(red >= 0 && red <= 255, "Invalid red component")
 		assert(green >= 0 && green <= 255, "Invalid green component")
@@ -153,10 +171,12 @@ extension UIColor {
 		self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
 	}
 	
+	//init with hex values
 	convenience init(netHex:Int) {
 		self.init(red:(netHex >> 16) & 0xff, green:(netHex >> 8) & 0xff, blue:netHex & 0xff)
 	}
 	
+	//default colors
 	struct FlatColor {
 		struct Green {
 			static let Fern = UIColor(netHex: 0x6ABB72)
