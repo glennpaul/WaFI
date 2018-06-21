@@ -42,16 +42,16 @@ class EventTableViewCell: UITableViewCell {
 		willSet {
 			//grab reference to image
 			let theUID = newValue
-			
 			//check if image has changed via edit event
 			if didChangeImage == false {
 				//if not changed check if image is already in cache
 				if let cachedImage = imageCache.object(forKey: theUID as NSString) {
 					//if in cache, grab image from cache
 					self.eventImage.image = cachedImage
+					myEvent?.photo = cachedImage
 				} else {
 					//if not in cache, grab reference to image and grab image
-					let reference = firebaseStorage.child("event_images/\(UID)_\(theUID)_image.png")
+					let reference = firebaseStorage.child("event_images/\(UID)/\(UID)_\(theUID)_image.png")
 					reference.getData(maxSize: 2 * 1024 * 1024) { (data, error) -> Void in
 						if (error != nil) {
 							print(error!)
@@ -60,7 +60,7 @@ class EventTableViewCell: UITableViewCell {
 							let toBeCached = UIImage(data: data!)!
 							self.imageCache.setObject(toBeCached, forKey: theUID as NSString)
 							self.eventImage.image = toBeCached
-							//self.myEvent?.photo = toBeCached
+							self.myEvent?.photo = toBeCached
 						}
 					}
 				}

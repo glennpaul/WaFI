@@ -42,6 +42,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	//setup data source array and reload table if new events
 	var events = [Event]() {
 		didSet {
+			//reload tableview whenever data added
 			tableView.reloadData()
 		}
 	}
@@ -102,8 +103,10 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	//turning editing on and off
 	@objc private func toggleEditing() {
-		tableView.setEditing(!tableView.isEditing, animated: true) // Set opposite value of current editing status
-		navigationItem.rightBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit" // Set title depending on the editing status
+		// Set opposite value of current editing status
+		tableView.setEditing(!tableView.isEditing, animated: true)
+		// Set title depending on the editing status
+		navigationItem.rightBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit"
 		//save only after signaling done editing
 		if !tableView.isEditing {
 			saveEventsToDatabase()
@@ -163,11 +166,11 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		cell.eventImage?.image = thePhoto
 		cell.eventDetail?.text = medDashFormatter.string(from: theDate)
 		cell.date = theDate
+		cell.UID = currentUser.uid
 		cell.eventUID = theUID
 		
-		//start timer
+		//start timer and return cell
 		cell.shouldSet = 1
-		//add cell to table
 		return cell
 	}
 	//set rearranging cells
@@ -178,22 +181,28 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
 			//delete image from firebase when deleting event
-			let reference = firebaseStorage.child("/event_images/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
+			print("/event_images/\(self.currentUser.uid)/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
+			let reference = firebaseStorage.child("/event_images/\(self.currentUser.uid)/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
 			reference.delete { error in
 				if let error = error {
 					print(error)
+				} else {
+					print("delete successful")
 				}
 			}
 			// Delete the row from the data source
 			self.events.remove(at: indexPath.row)
+			//make sure event at end of list in firebase is deleted so it isn't duplicated
+			print("\(self.events.count+1)")
+			if indexPath.row != self.events.count - 1 {
+				self.ref.child("users").child(self.currentUser.uid).child("\(indexPath.row+1)").removeValue()
+			}
+			self.ref.child("users").child(self.currentUser.uid).child("\(self.events.count+1)").removeValue()
 			for i in (indexPath.row)..<self.events.count {
 				//make sure all of the events after are saved since position change
 				self.events[i].modified = true
 			}
-			//make sure event at end of list in firebase is deleted so it isn't duplicated
-			if indexPath.row != self.events.count-1 {
-				self.ref.child("users").child(self.currentUser.uid).child("\(self.events.count+1)").removeValue()
-			}
+			//make sure events are saved in case user closes out before pressing editing done button
 			self.saveEventsToDatabase()
 		}
 	}
@@ -276,25 +285,32 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	@IBAction func unwindToEventList(sender: UIStoryboardSegue) {
 		//make sure coming from viewcontroller scene
 		if let sourceViewController = sender.source as? ViewController, let event = sourceViewController.event {
+			//set modified = true for event in question
+			event.modified = true
 			//make sure to update if editing event, or add new if new event
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
+				
 				let theCell = tableView.cellForRow(at: selectedIndexPath) as! EventTableViewCell
-				//theCell.didChangeImage = true
-				//if editing a selected row update event and table
-				let theEvent = event
-				events[selectedIndexPath.row] = theEvent
-				events[selectedIndexPath.row].modified = true
-				if event.photo != theCell.eventImage.image {
+				if theCell.eventImage.image != event.photo {
 					theCell.didChangeImage = true
 				}
-				events[selectedIndexPath.row].UID = event.UID
+				
+				let theEvent = event
+				
+				//set event and event UID for cell and source
+				events[selectedIndexPath.row] = theEvent
 				theCell.myEvent = theEvent
-				(tableView.cellForRow(at: selectedIndexPath) as! EventTableViewCell).UID = event.UID
+				theCell.UID = currentUser.uid
+				//theCell.eventUID = theEvent.UID
 			} else {
 				// Add a new meal to end of table
-				events.append(event)
-				events[events.count-1].modified = true
-				events[events.count-1].UID = event.UID
+				let theEvent = event
+				events.append(theEvent)
+				let theCell = tableView.cellForRow(at: NSIndexPath(row: self.events.count-1, section: 0) as IndexPath) as! EventTableViewCell
+				theCell.myEvent = theEvent
+				theCell.UID = currentUser.uid
+				theCell.didChangeImage = true
+				theCell.eventUID = theEvent.UID
 			}
 			//make sure to save changes
 			saveEventsToDatabase()
@@ -361,6 +377,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 					for index in 0..<temp.count {
 						//add grabbed events to event array data source
 						self.events.append(temp[index])
+						let theCell = self.tableView.cellForRow(at: NSIndexPath(row: index, section: 0) as IndexPath) as! EventTableViewCell
+						theCell.eventUID = self.events[index].UID
 					}
 					self.grabbingEvents = false
 				}
@@ -421,16 +439,22 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				//save node
 				self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
 				//save photo to storage
-				uploadImage(events[index],firebaseStorage)
+				uploadImage(index,firebaseStorage)
 				//after saving, reset modified boolean to false
 				events[index].modified = false
 			}
 		}
+		let newCount = ["\(currentUser.uid)":events.count]
+		//save node
+		self.ref.child("events_count").updateChildValues(newCount)
 	}
 	//function for uploading single image to firebase storage
-	func uploadImage(_ thisEvent:Event,_ thisRef:StorageReference) {
-		let data = UIImageJPEGRepresentation(thisEvent.photo!, 1)
-		let imageRef = thisRef.child("/event_images/\(currentUser.uid)_\(thisEvent.UID)_image.png")
+	func uploadImage(_ index:Int,_ thisRef:StorageReference) {
+		let theCell = tableView.cellForRow(at: NSIndexPath(row: index, section: 0) as IndexPath) as! EventTableViewCell
+		let Photo = theCell.eventImage.image
+		let theUID = events[index].UID
+		let data = UIImageJPEGRepresentation(Photo!, 1)
+		let imageRef = thisRef.child("/event_images/\(currentUser.uid)/\(currentUser.uid)_\(theUID)_image.png")
 		_ = imageRef.putData(data!, metadata:nil,completion:{(metadata,error)
 			in guard metadata != nil else {
 				//for debugging errors
