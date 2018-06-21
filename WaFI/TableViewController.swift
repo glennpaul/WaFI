@@ -139,6 +139,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		events.insert(movedObject, at: destinationIndexPath.row)
 		//iterate through rows of modified position and set modified to true
 		for i in start...end {
+			(tableView.cellForRow(at: NSIndexPath(row: i, section: 0) as IndexPath) as! EventTableViewCell).eventUID = events[i].UID
 			events[i].modified = true
 		}
 	}
