@@ -180,8 +180,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	// Override to support editing the table view.
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
+			
 			//delete image from firebase when deleting event
-			print("/event_images/\(self.currentUser.uid)/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
 			let reference = firebaseStorage.child("/event_images/\(self.currentUser.uid)/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
 			reference.delete { error in
 				if let error = error {
@@ -190,18 +190,24 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 					print("delete successful")
 				}
 			}
+			
 			// Delete the row from the data source
 			self.events.remove(at: indexPath.row)
+			
 			//make sure event at end of list in firebase is deleted so it isn't duplicated
-			print("\(self.events.count+1)")
 			if indexPath.row != self.events.count - 1 {
 				self.ref.child("users").child(self.currentUser.uid).child("\(indexPath.row+1)").removeValue()
 			}
+			
+			//remove event at end of list so it isn't duplicated when loaded again
 			self.ref.child("users").child(self.currentUser.uid).child("\(self.events.count+1)").removeValue()
+			
+			//make sure the new event numbers are saved in order
 			for i in (indexPath.row)..<self.events.count {
 				//make sure all of the events after are saved since position change
 				self.events[i].modified = true
 			}
+			
 			//make sure events are saved in case user closes out before pressing editing done button
 			self.saveEventsToDatabase()
 		}
@@ -283,35 +289,43 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	
 	//setup once back from adding meal or editing meal
 	@IBAction func unwindToEventList(sender: UIStoryboardSegue) {
+		
 		//make sure coming from viewcontroller scene
 		if let sourceViewController = sender.source as? ViewController, let event = sourceViewController.event {
+			
 			//set modified = true for event in question
 			event.modified = true
+			
 			//make sure to update if editing event, or add new if new event
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
 				
+				//set event as edited for saving
 				let theCell = tableView.cellForRow(at: selectedIndexPath) as! EventTableViewCell
 				if theCell.eventImage.image != event.photo {
 					theCell.didChangeImage = true
 				}
 				
+				//initialize event
 				let theEvent = event
 				
-				//set event and event UID for cell and source
+				//set event and event UID for cell and source to trigger image loading
 				events[selectedIndexPath.row] = theEvent
 				theCell.myEvent = theEvent
 				theCell.UID = currentUser.uid
-				//theCell.eventUID = theEvent.UID
 			} else {
+				
 				// Add a new meal to end of table
 				let theEvent = event
 				events.append(theEvent)
+				
+				//initialize cell values
 				let theCell = tableView.cellForRow(at: NSIndexPath(row: self.events.count-1, section: 0) as IndexPath) as! EventTableViewCell
 				theCell.myEvent = theEvent
 				theCell.UID = currentUser.uid
 				theCell.didChangeImage = true
 				theCell.eventUID = theEvent.UID
 			}
+			
 			//make sure to save changes
 			saveEventsToDatabase()
 		}
@@ -327,6 +341,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			} catch let error as NSError {
 				print(error.localizedDescription)
 			}
+			//save events to firebase
 			saveEventsToDatabase()
 		}
 	}
@@ -371,9 +386,13 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	func getEventsFromFirebase(withCompletion completion: (() -> ())? = nil)  {
 		//set indicator to grabbing events as true and get the data from data source in background thread
 		self.grabbingEvents = true
+		
+		//grab events in background queue
 		DispatchQueue.global(qos: DispatchQoS.background.qosClass).async() { () -> Void in
 			self.grabEvent { (temp) in
 				if let temp = temp {
+					
+					//set events in data source and trigger image grab
 					for index in 0..<temp.count {
 						//add grabbed events to event array data source
 						self.events.append(temp[index])
@@ -387,15 +406,21 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	//function for grabbing events from firebase
 	func grabEvent(completion: @escaping ([Event]?) -> Void) {
+		
 		//setup reference and array to be used
 		let ref = Database.database().reference()
 		var eventArray = [Event]()
+		
 		//setup formatters and default image
 		let defaultPhoto = UIImage(named: "defaultPhoto")
+		
 		//grab children event of user and insert to array (only set amount from minload to maxload)
 		ref.child("users").child(currentUser.uid).queryOrdered(byChild: "number").queryStarting(atValue: minload).queryEnding(atValue: maxload).observeSingleEvent(of: .value, with: { (snapshot) in
+			
 			//make sure array to be passed is empty first
 			eventArray.removeAll()
+			
+			//for each grabbed child node, set object in array with values
 			let enumerator = snapshot.children
 			while let data = enumerator.nextObject() as? DataSnapshot {
 				guard
@@ -420,14 +445,19 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				temp.UID = eventUID
 				eventArray.append(temp)
 			}
+			//pass back
 			completion(eventArray)
 		})
 	}
 	//save events in table to firebase
 	private func saveEventsToDatabase() {
+		
 		//setup and save each event
 		for (index,_) in events.enumerated() {
+			
+			//make sure not saving unneccessarily by checking if modified
 			if events[index].modified == true {
+				
 				//setup node
 				let thisEvent = [
 					"name":events[index].name,
@@ -436,23 +466,31 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 					"number":index+1
 					] as [String : Any]
 				let insertNode = ["\(index+1)":thisEvent]
+				
 				//save node
 				self.ref.child("users").child(currentUser.uid).updateChildValues(insertNode)
+				
 				//save photo to storage
 				uploadImage(index,firebaseStorage)
+				
 				//after saving, reset modified boolean to false
 				events[index].modified = false
 			}
 		}
+		
+		//update event count for that user in firebase
 		let newCount = ["\(currentUser.uid)":events.count]
-		//save node
 		self.ref.child("events_count").updateChildValues(newCount)
 	}
 	//function for uploading single image to firebase storage
 	func uploadImage(_ index:Int,_ thisRef:StorageReference) {
+		
+		//make sure image is loaded
 		let theCell = tableView.cellForRow(at: NSIndexPath(row: index, section: 0) as IndexPath) as! EventTableViewCell
 		let Photo = theCell.eventImage.image
 		let theUID = events[index].UID
+		
+		//upload to firebase
 		let data = UIImageJPEGRepresentation(Photo!, 1)
 		let imageRef = thisRef.child("/event_images/\(currentUser.uid)/\(currentUser.uid)_\(theUID)_image.png")
 		_ = imageRef.putData(data!, metadata:nil,completion:{(metadata,error)
@@ -465,9 +503,11 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	}
 	//function for grabbing event count
 	func grabUserEventCount(completion: @escaping (Int) -> Void) {
+		
 		//setup reference to be used
 		let ref = Database.database().reference()
-		//grab event count and pass to function to load more
+		
+		//grab event count and pass back to function to load more
 		ref.child("events_count").child(currentUser.uid).observeSingleEvent(of: .value, with: { (snapshot) in
 			let count = (snapshot.value as? Int)!
 			completion(count)

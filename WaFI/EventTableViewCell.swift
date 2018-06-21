@@ -40,23 +40,29 @@ class EventTableViewCell: UITableViewCell {
 	var UID:String = ""
 	var eventUID: String = "" {
 		willSet {
-			//grab reference to image
+			
+			//create reference to image
 			let theUID = newValue
+			
 			//check if image has changed via edit event
 			if didChangeImage == false {
+				
 				//if not changed check if image is already in cache
 				if let cachedImage = imageCache.object(forKey: theUID as NSString) {
+					
 					//if in cache, grab image from cache
 					self.eventImage.image = cachedImage
 					myEvent?.photo = cachedImage
+					
 				} else {
+					
 					//if not in cache, grab reference to image and grab image
 					let reference = firebaseStorage.child("event_images/\(UID)/\(UID)_\(theUID)_image.png")
 					reference.getData(maxSize: 2 * 1024 * 1024) { (data, error) -> Void in
 						if (error != nil) {
 							print(error!)
 						} else {
-							//once image grabbed from firebase, cache it and set image in cell
+							//once image grabbed from firebase, cache it and set image in cell and event
 							let toBeCached = UIImage(data: data!)!
 							self.imageCache.setObject(toBeCached, forKey: theUID as NSString)
 							self.eventImage.image = toBeCached
@@ -64,8 +70,10 @@ class EventTableViewCell: UITableViewCell {
 						}
 					}
 				}
+				
 			} else {
-				//if image has changed, set cell image as the new event photo from event and set change back to false
+				
+				//if image has changed, set cell image as the new event photo from event and set change back to false once completed
 				let thePhoto = myEvent?.photo
 				self.imageCache.setObject(thePhoto!, forKey: theUID as NSString)
 				eventImage.image = thePhoto
@@ -82,7 +90,6 @@ class EventTableViewCell: UITableViewCell {
 			startTimer()
 		}
 	}
-	
 	//indicator if image has changed due to changing it in event edit
 	var didChangeImage:Bool? = false {
 		didSet {
@@ -90,7 +97,7 @@ class EventTableViewCell: UITableViewCell {
 			imageCache.removeObject(forKey: eventUID as NSString)
 		}
 	}
-	
+	//start timer in cell
 	private func startTimer() {
 		//setup timer to fire once per second
 		if let interval = shouldSet {
@@ -106,10 +113,10 @@ class EventTableViewCell: UITableViewCell {
 		}
 		RunLoop.current.add(timer!, forMode: .commonModes)
 	}
-	
 	//function to update labels when timer fires
 	@objc func onComplete() {
 		
+		//initialize date component for adding day
 		var comp = DateComponents()
 		comp.day = 1
 		
