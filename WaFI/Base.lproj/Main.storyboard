@@ -493,7 +493,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="90" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="brS-wy-MIH">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="639"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" showsReorderControl="YES" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="theCell" rowHeight="90" id="LYM-gZ-R0l" customClass="EventTableViewCell" customModule="WaFI">
@@ -515,15 +515,16 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7tU-Nh-dle">
-                                                            <rect key="frame" x="98" y="40" width="123" height="39"/>
+                                                            <rect key="frame" x="98" y="40" width="166" height="39"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MCI-xf-4T9">
-                                                            <rect key="frame" x="229" y="40" width="131" height="39"/>
+                                                            <rect key="frame" x="272" y="40" width="88" height="39"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <gestureRecognizers/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -545,20 +546,22 @@
                                         </connections>
                                     </tableView>
                                     <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bT8-ah-XFl">
-                                        <rect key="frame" x="0.0" y="639" width="375" height="28"/>
+                                        <rect key="frame" x="0.0" y="623" width="375" height="44"/>
                                         <items>
-                                            <barButtonItem title="Sort by Date" id="efc-1t-25H">
+                                            <barButtonItem title="Sort by Name" image="alphabet-icon" id="yXu-kx-J59">
+                                                <connections>
+                                                    <action selector="sortByName:" destination="GX8-tf-soB" id="o0G-kA-CZW"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="qfN-JX-Gzw"/>
+                                            <barButtonItem title="Sort by Date" image="date-icon" id="efc-1t-25H">
                                                 <inset key="largeContentSizeImageInsets" minX="0.0" minY="10" maxX="0.0" maxY="0.0"/>
                                                 <connections>
                                                     <action selector="sortByDate:" destination="GX8-tf-soB" id="FTl-5l-g4K"/>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem title="Sort by Name" id="yXu-kx-J59">
-                                                <connections>
-                                                    <action selector="sortByName:" destination="GX8-tf-soB" id="o0G-kA-CZW"/>
-                                                </connections>
-                                            </barButtonItem>
-                                            <barButtonItem title="Reverse Order" id="BN8-3S-doE">
+                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="J6r-hv-QCj"/>
+                                            <barButtonItem title="Reverse Order" image="reverse-icon" id="BN8-3S-doE">
                                                 <connections>
                                                     <action selector="reverseEvents:" destination="GX8-tf-soB" id="kfW-ge-S6o"/>
                                                 </connections>
@@ -639,7 +642,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="alphabet-icon" width="25" height="25"/>
+        <image name="date-icon" width="25" height="25"/>
         <image name="defaultPhoto" width="320" height="320"/>
+        <image name="reverse-icon" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="j6Z-Zx-0eI"/>

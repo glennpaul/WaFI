@@ -97,6 +97,10 @@ class EventTableViewCell: UITableViewCell {
 			imageCache.removeObject(forKey: eventUID as NSString)
 		}
 	}
+	
+	
+	
+	
 	//start timer in cell
 	private func startTimer() {
 		//setup timer to fire once per second
