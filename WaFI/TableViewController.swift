@@ -298,23 +298,23 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			event.modified = true
 			
 			//make sure to update if editing event, or add new if new event
-			if let selectedIndexPath = tableView.indexPathForSelectedRow {
-				
-				//set event as edited for saving
-				let theCell = tableView.cellForRow(at: selectedIndexPath) as! EventTableViewCell
-				if theCell.eventImage.image != event.photo {
-					theCell.didChangeImage = true
+			if sender.identifier == "addEvent" {
+				if let selectedIndexPath = tableView.indexPathForSelectedRow {
+					//set event as edited for saving
+					let theCell = tableView.cellForRow(at: selectedIndexPath) as! EventTableViewCell
+					if theCell.eventImage.image != event.photo {
+						theCell.didChangeImage = true
+					}
+					
+					//initialize event
+					let theEvent = event
+					
+					//set event and event UID for cell and source to trigger image loading
+					events[selectedIndexPath.row] = theEvent
+					theCell.myEvent = theEvent
+					theCell.UID = currentUser.uid
 				}
-				
-				//initialize event
-				let theEvent = event
-				
-				//set event and event UID for cell and source to trigger image loading
-				events[selectedIndexPath.row] = theEvent
-				theCell.myEvent = theEvent
-				theCell.UID = currentUser.uid
 			} else {
-				
 				// Add a new meal to end of table
 				let theEvent = event
 				events.append(theEvent)

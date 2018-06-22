@@ -135,7 +135,7 @@ class EventTableViewCell: UITableViewCell {
 		if date > Calendar.current.date(byAdding: comp, to: Date())! {
 			//if too far, set blank
 			countdownLabel.text = ""
-			self.backgroundColor = UIColor.FlatColor.Green.BadboyGreen
+			self.backgroundColor = UIColor.white
 		} else if date > Date() {
 			//if within a day, set countdown
 			countdownLabel.text = stringFromTimeInterval(interval: date.timeIntervalSince(Date()))
@@ -143,7 +143,7 @@ class EventTableViewCell: UITableViewCell {
 		} else {
 			//if past, clear label, color cell and set timer to be removed
 			countdownLabel.text = ""
-			self.backgroundColor = UIColor.FlatColor.Red.BadBoyRed
+			self.backgroundColor = UIColor.FlatColor.Blue.BadBoyBlue
 			timeCounter = 0
 		}
 	}
@@ -203,7 +203,7 @@ extension UIColor {
 			static let PictonBlue = UIColor(netHex: 0x5CADCF)
 			static let Mariner = UIColor(netHex: 0x3585C5)
 			static let CuriousBlue = UIColor(netHex: 0x4590B6)
-			static let Denim = UIColor(netHex: 0x2F6CAD)
+			static let BadBoyBlue = UIColor(netHex: 0x5d9fd5)
 			static let Chambray = UIColor(netHex: 0x485675)
 			static let BlueWhale = UIColor(netHex: 0x29334D)
 		}
@@ -228,7 +228,7 @@ extension UIColor {
 			static let Valencia = UIColor(netHex: 0xCC4846)
 			static let Cinnabar = UIColor(netHex: 0xDC5047)
 			static let WellRead = UIColor(netHex: 0xB33234)
-			static let BadBoyRed = UIColor(netHex: 0xC39797)
+			static let BadBoyRed = UIColor(netHex: 0xffcccc)
 		}
 		
 		struct Gray {
