@@ -255,6 +255,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		switch(segue.identifier ?? "") {
 		case "addEvent":
 			os_log("Adding a new meal.", log: OSLog.default, type: .debug)
+			self.tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: true)
 		case "showEvent":
 			guard let ViewController = segue.destination as? ViewController else {
 				fatalError("Unexpected destination: \(segue.destination)")
@@ -298,23 +299,23 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			event.modified = true
 			
 			//make sure to update if editing event, or add new if new event
-			if sender.identifier == "addEvent" {
-				if let selectedIndexPath = tableView.indexPathForSelectedRow {
-					//set event as edited for saving
-					let theCell = tableView.cellForRow(at: selectedIndexPath) as! EventTableViewCell
-					if theCell.eventImage.image != event.photo {
-						theCell.didChangeImage = true
-					}
-					
-					//initialize event
-					let theEvent = event
-					
-					//set event and event UID for cell and source to trigger image loading
-					events[selectedIndexPath.row] = theEvent
-					theCell.myEvent = theEvent
-					theCell.UID = currentUser.uid
+			if let selectedIndexPath = tableView.indexPathForSelectedRow {
+				
+				//set event as edited for saving
+				let theCell = tableView.cellForRow(at: selectedIndexPath) as! EventTableViewCell
+				if theCell.eventImage.image != event.photo {
+					theCell.didChangeImage = true
 				}
+				
+				//initialize event
+				let theEvent = event
+				
+				//set event and event UID for cell and source to trigger image loading
+				events[selectedIndexPath.row] = theEvent
+				theCell.myEvent = theEvent
+				theCell.UID = currentUser.uid
 			} else {
+				
 				// Add a new meal to end of table
 				let theEvent = event
 				events.append(theEvent)
