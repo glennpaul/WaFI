@@ -150,7 +150,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? EventTableViewCell  else {
 			fatalError("The dequeued cell is not an instance of EventTableViewCell.")
 		}
-		// Fetches the appropriate meal for the data source layout.
+		// Fetches the appropriate event for the data source layout.
 		let row = indexPath.row
 		
 		//set event UID for cell, triggers image grab
@@ -249,12 +249,12 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	//----------------------------------------------------------------
 	// MARK: Navigation
 	
-	//prepare seque into adding ne wmeal or editing meal
+	//prepare seque into adding new event or editing event
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		super.prepare(for: segue, sender: sender)
 		switch(segue.identifier ?? "") {
 		case "addEvent":
-			os_log("Adding a new meal.", log: OSLog.default, type: .debug)
+			os_log("Adding a new event.", log: OSLog.default, type: .debug)
 			self.tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: true)
 		case "showEvent":
 			guard let ViewController = segue.destination as? ViewController else {
@@ -289,7 +289,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	//----------------------------------------------------------------
 	//MARK: Actions
 	
-	//setup once back from adding meal or editing meal
+	//setup once back from adding event or editing event
 	@IBAction func unwindToEventList(sender: UIStoryboardSegue) {
 		
 		//make sure coming from viewcontroller scene
@@ -316,7 +316,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				theCell.UID = currentUser.uid
 			} else {
 				
-				// Add a new meal to end of table
+				// Add a new event to end of table
 				let theEvent = event
 				events.append(theEvent)
 				
