@@ -199,7 +199,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			if indexPath.row != self.events.count - 1 {
 				self.ref.child("users").child(self.currentUser.uid).child("\(indexPath.row+1)").removeValue()
 			}
-			
 			//remove event at end of list so it isn't duplicated when loaded again
 			self.ref.child("users").child(self.currentUser.uid).child("\(self.events.count+1)").removeValue()
 			
@@ -404,8 +403,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 					for index in 0..<temp.count {
 						//add grabbed events to event array data source
 						self.events.append(temp[index])
-						//let theCell = self.tableView.cellForRow(at: NSIndexPath(row: index, section: 0) as IndexPath) as! EventTableViewCell
-						//theCell.eventUID = self.events[index].UID
 					}
 					self.grabbingEvents = false
 				}
@@ -494,8 +491,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	func uploadImage(_ index:Int,_ thisRef:StorageReference) {
 		
 		//make sure image is loaded
-		//let theCell = tableView.cellForRow(at: NSIndexPath(row: index, section: 0) as IndexPath) as! EventTableViewCell
-		//let Photo = theCell.eventImage.image
 		let Photo = events[index].photo
 		let theUID = events[index].UID
 		
