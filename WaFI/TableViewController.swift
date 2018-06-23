@@ -183,6 +183,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		if editingStyle == .delete {
 			
 			//delete image from firebase when deleting event
+			print("/event_images/\(self.currentUser.uid)/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
 			let reference = firebaseStorage.child("/event_images/\(self.currentUser.uid)/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
 			reference.delete { error in
 				if let error = error {
@@ -192,19 +193,14 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				}
 			}
 			
+			//remove event at end of list so it isn't duplicated when loaded again
+			self.ref.child("users").child(self.currentUser.uid).child("\(self.events.count)").removeValue()
+			
 			// Delete the row from the data source
 			self.events.remove(at: indexPath.row)
 			
-			//make sure event at end of list in firebase is deleted so it isn't duplicated
-			if indexPath.row != self.events.count - 1 {
-				self.ref.child("users").child(self.currentUser.uid).child("\(indexPath.row+1)").removeValue()
-			}
-			//remove event at end of list so it isn't duplicated when loaded again
-			self.ref.child("users").child(self.currentUser.uid).child("\(self.events.count+1)").removeValue()
-			
 			//make sure the new event numbers are saved in order
 			for i in (indexPath.row)..<self.events.count {
-				//make sure all of the events after are saved since position change
 				self.events[i].modified = true
 			}
 			
@@ -227,7 +223,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		if (self.events.count - indexPath.row) == self.refreshThreshold && !self.grabbingEvents {
 			grabUserEventCount(){ (count) in
 				//if almost to end of list, not busy grabbing events or photos and theres more events to grab, then incerement loading function and grab events
-				if self.maxload <= count {
+				if self.maxload < count {
 					self.minload = self.maxload + 1
 					self.maxload += 10
 					self.getEventsFromFirebase()
@@ -412,9 +408,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		let ref = Database.database().reference()
 		var eventArray = [Event]()
 		
-		//setup formatters and default image
-		let defaultPhoto = UIImage(named: "defaultPhoto")
-		
 		//grab children event of user and insert to array (only set amount from minload to maxload)
 		ref.child("users").child(currentUser.uid).queryOrdered(byChild: "number").queryStarting(atValue: minload).queryEnding(atValue: maxload).observeSingleEvent(of: .value, with: { (snapshot) in
 			
@@ -438,7 +431,7 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 						return
 				}
 				//setup barebones event and populate with grabbed data
-				guard let temp = Event(name: "tempName", photo: defaultPhoto, date:Date(),UID:"") else {
+				guard let temp = Event(name: "tempName", photo: self.defaultPhoto, date:Date(),UID:"") else {
 					fatalError("Unable to instantiate temporary event")
 				}
 				temp.name = eventName

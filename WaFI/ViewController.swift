@@ -239,7 +239,7 @@ class ViewController: UIViewController, UITextFieldDelegate, UIImagePickerContro
 		let maxWidth: Float = 1024.0
 		var imgRatio: Float = actualWidth / actualHeight
 		let maxRatio: Float = maxWidth / maxHeight
-		let compressionQuality: Float = 1 //change for better compression
+		let compressionQuality: Float = 0.5 //change for better compression
 		//50 percent compression
 		if actualHeight > maxHeight || actualWidth > maxWidth {
 			if imgRatio < maxRatio {
