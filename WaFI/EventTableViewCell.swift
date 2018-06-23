@@ -95,8 +95,10 @@ class EventTableViewCell: UITableViewCell {
 	//indicator if image has changed due to changing it in event edit
 	var didChangeImage:Bool? = false {
 		didSet {
-			//if indicator set, make sure to clear cache for that UID event
-			imageCache.removeObject(forKey: eventUID as NSString)
+			if didChangeImage == true {
+				//if indicator set, make sure to clear cache for that UID event
+				imageCache.removeObject(forKey: eventUID as NSString)
+			}
 		}
 	}
 	

@@ -254,7 +254,10 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		switch(segue.identifier ?? "") {
 		case "addEvent":
 			os_log("Adding a new event.", log: OSLog.default, type: .debug)
-			self.tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: true)
+			//deselect
+			if let selected = self.tableView.indexPathForSelectedRow{
+				self.tableView.deselectRow(at: selected, animated: true)
+			}
 		case "showEvent":
 			guard let ViewController = segue.destination as? ViewController else {
 				fatalError("Unexpected destination: \(segue.destination)")
@@ -302,7 +305,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				
 				//set event as edited for saving
 				let theCell = tableView.cellForRow(at: selectedIndexPath) as! EventTableViewCell
-				if theCell.eventImage.image != event.photo {
+				let cachedImage = theCell.imageCache.object(forKey: event.UID as NSString)
+				if cachedImage != event.photo {
 					theCell.didChangeImage = true
 				}
 				
@@ -318,14 +322,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				// Add a new event to end of table
 				let theEvent = event
 				events.append(theEvent)
-				/*
-				//initialize cell values
-				let theCell = tableView.cellForRow(at: NSIndexPath(row: self.events.count-1, section: 0) as IndexPath) as! EventTableViewCell
-				theCell.myEvent = theEvent
-				theCell.UID = currentUser.uid
-				theCell.didChangeImage = true
-				theCell.eventUID = theEvent.UID
-*/
 			}
 			
 			//make sure to save changes
