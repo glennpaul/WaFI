@@ -319,17 +319,23 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 				// Add a new event to end of table
 				let theEvent = event
 				events.append(theEvent)
-				
+				/*
 				//initialize cell values
 				let theCell = tableView.cellForRow(at: NSIndexPath(row: self.events.count-1, section: 0) as IndexPath) as! EventTableViewCell
 				theCell.myEvent = theEvent
 				theCell.UID = currentUser.uid
 				theCell.didChangeImage = true
 				theCell.eventUID = theEvent.UID
+*/
 			}
 			
 			//make sure to save changes
 			saveEventsToDatabase()
+			
+			//deselect
+			if let selected = self.tableView.indexPathForSelectedRow{
+				self.tableView.deselectRow(at: selected, animated: true)
+			}
 		}
 	}
 	//functionality for logging out
@@ -398,8 +404,8 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 					for index in 0..<temp.count {
 						//add grabbed events to event array data source
 						self.events.append(temp[index])
-						let theCell = self.tableView.cellForRow(at: NSIndexPath(row: index, section: 0) as IndexPath) as! EventTableViewCell
-						theCell.eventUID = self.events[index].UID
+						//let theCell = self.tableView.cellForRow(at: NSIndexPath(row: index, section: 0) as IndexPath) as! EventTableViewCell
+						//theCell.eventUID = self.events[index].UID
 					}
 					self.grabbingEvents = false
 				}
@@ -488,8 +494,9 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 	func uploadImage(_ index:Int,_ thisRef:StorageReference) {
 		
 		//make sure image is loaded
-		let theCell = tableView.cellForRow(at: NSIndexPath(row: index, section: 0) as IndexPath) as! EventTableViewCell
-		let Photo = theCell.eventImage.image
+		//let theCell = tableView.cellForRow(at: NSIndexPath(row: index, section: 0) as IndexPath) as! EventTableViewCell
+		//let Photo = theCell.eventImage.image
+		let Photo = events[index].photo
 		let theUID = events[index].UID
 		
 		//upload to firebase

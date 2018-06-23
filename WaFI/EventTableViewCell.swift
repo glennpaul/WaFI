@@ -51,6 +51,7 @@ class EventTableViewCell: UITableViewCell {
 				if let cachedImage = imageCache.object(forKey: theUID as NSString) {
 					
 					//if in cache, grab image from cache
+					print("grabbed from cache \(theUID)")
 					self.eventImage.image = cachedImage
 					myEvent?.photo = cachedImage
 					
@@ -63,6 +64,7 @@ class EventTableViewCell: UITableViewCell {
 							print(error!)
 						} else {
 							//once image grabbed from firebase, cache it and set image in cell and event
+							print("grabbed from firebase \(theUID)")
 							let toBeCached = UIImage(data: data!)!
 							self.imageCache.setObject(toBeCached, forKey: theUID as NSString)
 							self.eventImage.image = toBeCached
