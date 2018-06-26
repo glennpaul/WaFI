@@ -183,7 +183,6 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 		if editingStyle == .delete {
 			
 			//delete image from firebase when deleting event
-			print("/event_images/\(self.currentUser.uid)/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
 			let reference = firebaseStorage.child("/event_images/\(self.currentUser.uid)/\(self.currentUser.uid)_\(events[indexPath.row].UID)_image.png")
 			reference.delete { error in
 				if let error = error {
@@ -202,8 +201,12 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 			//make sure the new event numbers are saved in order
 			for i in (indexPath.row)..<self.events.count {
 				self.events[i].modified = true
+				//make sure new image is loaded into event
+				let theCell = tableView.cellForRow(at: IndexPath(row: i, section: 0)) as! EventTableViewCell
+				theCell.myEvent = events[i]
+				theCell.UID = (theCell.myEvent?.UID)!
 			}
-			
+			tableView.reloadData()
 			//make sure events are saved in case user closes out before pressing editing done button
 			self.saveEventsToDatabase()
 		}
@@ -395,6 +398,10 @@ class TableViewController: UIViewController, UITableViewDataSource, UITableViewD
 					for index in 0..<temp.count {
 						//add grabbed events to event array data source
 						self.events.append(temp[index])
+						
+						let theCell = self.tableView.cellForRow(at: NSIndexPath(row: index, section: 0) as IndexPath) as! EventTableViewCell
+						theCell.eventUID = self.events[index].UID
+						
 					}
 					self.grabbingEvents = false
 				}
